@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HOST QUIZ // TERMINAL</title>
+    <title>HOST QUIZ</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700&display=swap');
 
@@ -505,12 +505,12 @@
         <!-- ASCII Header -->
         <div class="ascii-art">
             <pre>
-    ██╗  ██╗ ██████╗ ███████╗████████╗     ██████╗ ██╗   ██╗██╗███████╗
-    ██║  ██║██╔═══██╗██╔════╝╚══██╔══╝    ██╔═══██╗██║   ██║██║╚══███╔╝
-    ███████║██║   ██║███████╗   ██║       ██║   ██║██║   ██║██║  ███╔╝ 
-    ██╔══██║██║   ██║╚════██║   ██║       ██║▄▄ ██║██║   ██║██║ ███╔╝  
-    ██║  ██║╚██████╔╝███████║   ██║       ╚██████╔╝╚██████╔╝██║███████╗
-    ╚═╝  ╚═╝ ╚═════╝ ╚══════╝   ╚═╝        ╚══▀▀═╝  ╚═════╝ ╚═╝╚══════╝
+    ██╗  ██╗ ██████╗ ███████╗████████╗
+    ██║  ██║██╔═══██╗██╔════╝╚══██╔══╝  
+    ███████║██║   ██║███████╗   ██║
+    ██╔══██║██║   ██║╚════██║   ██║ 
+    ██║  ██║╚██████╔╝███████║   ██║ 
+    ╚═╝  ╚═╝ ╚═════╝ ╚══════╝   ╚═╝        
             </pre>
         </div>
 
@@ -518,13 +518,13 @@
         <div class="header">
             <div class="logo">
                 <h1 class="glitch">HOST QUIZ</h1>
-                <p>BRAIN_HACK v2.0 // 120 LEVELS</p>
+                <p>BRAIN_QUIZ v1.0 - SendyHost</p>
             </div>
             <div class="key-terminal">
                 <span class="key-count" id="keyCount">5</span>
                 <div class="key-buttons">
-                    <button class="key-btn" onclick="claimDaily()">⟳ DAILY</button>
-                    <button class="key-btn" onclick="showAdModal()">📺 WATCH_AD</button>
+                    <button class="key-btn" onclick="claimDaily()">⟳ CLAIM_HARIAN</button>
+                    <button class="key-btn" onclick="showAdModal()">📺 WATCH_IKLAN</button>
                 </div>
             </div>
         </div>
@@ -533,22 +533,22 @@
         <div class="stats-grid">
             <div class="stat-card">
                 <div class="stat-value" id="completedStats">0</div>
-                <div class="stat-label">LEVEL_COMPLETED</div>
+                <div class="stat-label">LEVEL TERCAPAI</div>
             </div>
             <div class="stat-card">
                 <div class="stat-value" id="currentLevel">1</div>
-                <div class="stat-label">CURRENT_LEVEL</div>
+                <div class="stat-label">LEVEL BELUM SELESAI</div>
             </div>
             <div class="stat-card">
                 <div class="stat-value" id="keysRemaining">5</div>
-                <div class="stat-label">KEYS_AVAILABLE</div>
+                <div class="stat-label">KEYS HOST</div>
             </div>
         </div>
 
         <!-- Level Grid -->
         <div class="section-title">
             <span>SELECT LEVEL //</span>
-            <span style="color: var(--text-secondary); font-size: 0.9rem;">[120 CHALLENGES]</span>
+            <span style="color: var(--text-secondary); font-size: 0.9rem;">[120 TANTANGAN]</span>
         </div>
         <div class="level-grid" id="levelGrid"></div>
     </div>

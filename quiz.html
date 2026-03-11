@@ -1669,53 +1669,121 @@
         }
 
         function checkAnswer() {
-            const userAnswer = document.getElementById('answerInput').value.toLowerCase().trim();
-            const levelData = smartDB.find(l => l.level === currentLevel);
+    const userAnswer = document.getElementById('answerInput').value.toLowerCase().trim();
+    const levelData = smartDB.find(l => l.level === currentLevel);
+    
+    if (!levelData) return;
+
+    // Jawaban fleksibel (bisa mengandung kata kunci)
+    const isCorrect = userAnswer.includes(levelData.answer.toLowerCase());
+    const feedback = document.getElementById('feedback');
+
+    if (isCorrect) {
+        feedback.className = 'feedback success';
+        feedback.textContent = '✓ PINTAR! Jawaban kamu benar! +10 Poin!';
+
+        // Update progress
+        if (!userProgress.completedLevels.includes(currentLevel)) {
+            userProgress.completedLevels.push(currentLevel);
             
-            if (!levelData) return;
+            // TAMBAH POIN SETIAP JAWABAN BENAR
+            userProgress.poin += 10;
+            
+            // Update current level di progress
+            if (currentLevel < 120) {
+                userProgress.currentLevel = currentLevel + 1;
+            }
+            
+            localStorage.setItem('hostQuiz_nexus', JSON.stringify(userProgress));
+            
+            // Tampilkan notifikasi poin
+            showPoinNotification(10);
+        }
 
-            // Jawaban fleksibel (bisa mengandung kata kunci)
-            const isCorrect = userAnswer.includes(levelData.answer.toLowerCase());
-            const feedback = document.getElementById('feedback');
+        // Tampilkan indikator auto next
+        document.getElementById('autoNextIndicator').classList.add('visible');
 
-            if (isCorrect) {
-                feedback.className = 'feedback success';
-                feedback.textContent = '✓ PINTAR! Jawaban kamu benar! +10 Ilmu!';
-
-                // Update progress
-                if (!userProgress.completedLevels.includes(currentLevel)) {
-                    userProgress.completedLevels.push(currentLevel);
-                    
-                    // Update current level di progress
-                    if (currentLevel < 120) {
-                        userProgress.currentLevel = currentLevel + 1;
-                    }
-                    
-                    localStorage.setItem('hostQuiz_nexus', JSON.stringify(userProgress));
-                }
-
-                // Tampilkan indikator auto next
-                document.getElementById('autoNextIndicator').classList.add('visible');
-
-                // Auto next ke level berikutnya setelah 2 detik
-                if (autoNextTimer) clearTimeout(autoNextTimer);
-                
-                autoNextTimer = setTimeout(() => {
-                    if (currentLevel < 120) {
-                        navigate(1);
-                    } else {
-                        // Jika sudah level 120, kembali ke dashboard
-                        window.location.href = 'index.html?completed=120';
-                    }
-                }, 2000);
+        // Auto next ke level berikutnya setelah 2 detik
+        if (autoNextTimer) clearTimeout(autoNextTimer);
+        
+        autoNextTimer = setTimeout(() => {
+            if (currentLevel < 120) {
+                navigate(1);
             } else {
-                feedback.className = 'feedback error';
-                feedback.textContent = '✗ BELUM TEPAT! Coba lagi, kamu pasti bisa!';
-                
-                // Hapus indikator auto next jika ada
-                document.getElementById('autoNextIndicator').classList.remove('visible');
+                // Jika sudah level 120, kembali ke dashboard
+                window.location.href = 'index.html?completed=120';
+            }
+        }, 2000);
+    } else {
+        feedback.className = 'feedback error';
+        feedback.textContent = '✗ BELUM TEPAT! Coba lagi, kamu pasti bisa!';
+        
+        // Hapus indikator auto next jika ada
+        document.getElementById('autoNextIndicator').classList.remove('visible');
+    }
+}
+
+// Fungsi untuk menampilkan notifikasi poin
+function showPoinNotification(poin) {
+    // Buat elemen notifikasi
+    const notification = document.createElement('div');
+    notification.style.cssText = `
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: linear-gradient(135deg, #00ff9d, #ffd700);
+        color: #000000;
+        padding: 20px 40px;
+        border-radius: 50px;
+        font-size: 2rem;
+        font-weight: bold;
+        z-index: 9999;
+        box-shadow: 0 0 50px rgba(255,215,0,0.8);
+        animation: poinFloat 1.5s ease-out forwards;
+        text-align: center;
+        border: 3px solid white;
+    `;
+    notification.innerHTML = `+${poin} POIN! 🏆`;
+    
+    // Tambahkan style animasi
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes poinFloat {
+            0% {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.5);
+            }
+            20% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1.2);
+            }
+            40% {
+                transform: translate(-50%, -50%) scale(1);
+            }
+            80% {
+                opacity: 1;
+                transform: translate(-50%, -100px) scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: translate(-50%, -150px) scale(0.8);
             }
         }
+    `;
+    document.head.appendChild(style);
+    
+    // Tampilkan notifikasi
+    document.body.appendChild(notification);
+    
+    // Hapus setelah animasi selesai
+    setTimeout(() => {
+        notification.remove();
+        style.remove();
+    }, 1500);
+}
+
+        
 
         function useKey() {
             if (userProgress.keys <= 0) {

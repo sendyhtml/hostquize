@@ -5,12 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HOST QUIZ</title>
     <style>
-        /* ===== RESET & VARIABEL ===== */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700&display=swap');
 
         :root {
             --bg-primary: #0a0e1a;
@@ -22,22 +17,28 @@
             --terminal-green: #00ff9d;
             --terminal-blue: #3b8eff;
             --terminal-purple: #9d3bff;
+            --terminal-yellow: #ffd93d;
+            --terminal-orange: #ff9d3b;
             --terminal-gold: #ffd700;
             --border-color: #1e2638;
-            --font-mono: 'Courier New', monospace;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'JetBrains Mono', monospace;
         }
 
         body {
             background: var(--bg-primary);
             color: var(--text-primary);
-            font-family: var(--font-mono);
             min-height: 100vh;
             position: relative;
             overflow-x: hidden;
-            line-height: 1.5;
         }
 
-        /* ===== CRT EFFECT ===== */
+        /* CRT Effect */
         body::before {
             content: "";
             position: fixed;
@@ -57,7 +58,7 @@
             100% { transform: translateY(100%); }
         }
 
-        /* ===== GRAIN ===== */
+        /* Grain Effect */
         body::after {
             content: "";
             position: fixed;
@@ -79,7 +80,7 @@
             z-index: 2;
         }
 
-        /* ===== HEADER TERMINAL ===== */
+        /* Header Terminal */
         .terminal-header {
             background: #000000;
             border: 2px solid var(--terminal-green);
@@ -108,7 +109,11 @@
             color: var(--terminal-blue);
             margin-top: 15px;
         }
-        .path span { color: var(--text-secondary); }
+
+        .path span {
+            color: var(--text-secondary);
+        }
+
         .path::before {
             content: "~/$";
             color: var(--terminal-green);
@@ -140,20 +145,23 @@
             border-radius: 6px;
             cursor: pointer;
             font-weight: bold;
-            font-family: inherit;
             transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
         }
+
         .key-btn:hover:not(:disabled) {
             border-color: var(--terminal-green);
             color: var(--terminal-green);
             box-shadow: 0 0 20px rgba(0,255,157,0.3);
         }
+
         .key-btn:disabled {
             opacity: 0.3;
             cursor: not-allowed;
         }
 
-        /* ===== QUIZ AREA ===== */
+        /* Main Quiz Area */
         .quiz-area {
             background: var(--bg-secondary);
             border: 2px solid var(--border-color);
@@ -161,6 +169,7 @@
             border-radius: 0 0 12px 12px;
             padding: 40px;
             margin-bottom: 20px;
+            position: relative;
         }
 
         .level-info {
@@ -184,12 +193,13 @@
         .category {
             color: var(--terminal-gold);
         }
+
         .category::before {
             content: "📚";
             margin-right: 5px;
         }
 
-        /* ===== SMART CONTAINER ===== */
+        /* Smart Container */
         .smart-container {
             background: #000000;
             border: 2px solid var(--border-color);
@@ -198,7 +208,7 @@
             margin-bottom: 30px;
             position: relative;
             overflow: hidden;
-            min-height: 200px;
+            min-height: 250px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -216,54 +226,77 @@
         }
 
         .smart-emoji {
-            font-size: 6rem;
+            font-size: 8rem;
             line-height: 1;
-            margin-bottom: 15px;
-            filter: drop-shadow(0 0 20px rgba(255,215,0,0.3));
+            margin-bottom: 20px;
+            filter: drop-shadow(0 0 30px rgba(255,215,0,0.3));
             animation: smartFloat 4s ease-in-out infinite;
         }
 
         @keyframes smartFloat {
-            0%,100% { transform: translateY(0); }
-            25% { transform: translateY(-8px); }
-            75% { transform: translateY(8px); }
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            25% { transform: translateY(-10px) rotate(5deg); }
+            75% { transform: translateY(10px) rotate(-5deg); }
         }
 
         .smart-title {
             color: var(--terminal-gold);
-            font-size: 1rem;
-            letter-spacing: 1px;
+            font-size: 1.1rem;
+            letter-spacing: 2px;
         }
 
-        /* ===== QUESTION ===== */
+        .smart-title::before,
+        .smart-title::after {
+            content: "🧠";
+            margin: 0 10px;
+            color: var(--terminal-green);
+            opacity: 0.5;
+        }
+
+        /* Question Text */
         .question-text {
-            font-size: 1.2rem;
-            line-height: 1.6;
-            margin-bottom: 25px;
-            padding: 15px;
+            font-size: 1.3rem;
+            line-height: 1.8;
+            margin-bottom: 30px;
+            padding: 20px;
             background: rgba(0,0,0,0.3);
             border-left: 4px solid var(--terminal-gold);
             border-radius: 4px;
         }
 
-        /* ===== KEY REVEAL ===== */
+        .question-text::before {
+            content: ">";
+            color: var(--terminal-gold);
+            margin-right: 10px;
+        }
+
+        /* Key Answer Section */
         .key-reveal {
             background: #000000;
-            border: 2px solid var(--terminal-gold);
+            border: 2px solid var(--terminal-yellow);
             border-radius: 8px;
             padding: 20px;
-            margin-bottom: 25px;
+            margin-bottom: 30px;
             display: none;
             position: relative;
         }
+
         .key-reveal.visible {
             display: block;
             animation: reveal 0.5s ease;
         }
+
         @keyframes reveal {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
+
         .key-reveal::before {
             content: "🔑 KEY ACCESS GRANTED";
             position: absolute;
@@ -271,22 +304,24 @@
             left: 20px;
             background: #000000;
             padding: 0 15px;
-            color: var(--terminal-gold);
+            color: var(--terminal-yellow);
             font-size: 0.8rem;
-            border: 1px solid var(--terminal-gold);
+            border: 1px solid var(--terminal-yellow);
             border-radius: 20px;
         }
+
         .answer-hidden {
-            font-size: 1.3rem;
+            font-size: 1.5rem;
             text-align: center;
-            color: var(--terminal-gold);
+            color: var(--terminal-yellow);
             word-break: break-word;
         }
 
-        /* ===== INPUT AREA ===== */
+        /* Input Area */
         .input-area {
             margin-top: 30px;
         }
+
         .terminal-input {
             width: 100%;
             padding: 15px 20px;
@@ -294,34 +329,59 @@
             border: 2px solid var(--border-color);
             border-radius: 8px;
             color: var(--terminal-green);
-            font-size: 1rem;
+            font-size: 1.1rem;
             margin-bottom: 15px;
-            font-family: inherit;
+            transition: all 0.3s;
         }
+
         .terminal-input:focus {
             outline: none;
             border-color: var(--terminal-gold);
-            box-shadow: 0 0 15px rgba(255,215,0,0.2);
+            box-shadow: 0 0 20px rgba(255,215,0,0.2);
         }
+
+        .terminal-input::placeholder {
+            color: var(--text-secondary);
+            opacity: 0.5;
+        }
+
         .btn-execute {
             width: 100%;
             padding: 15px;
             background: transparent;
             border: 2px solid var(--terminal-gold);
             color: var(--terminal-gold);
-            font-size: 1.1rem;
+            font-size: 1.2rem;
             font-weight: bold;
             border-radius: 8px;
             cursor: pointer;
-            font-family: inherit;
             transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+            letter-spacing: 2px;
         }
+
+        .btn-execute::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,215,0,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn-execute:hover::before {
+            left: 100%;
+        }
+
         .btn-execute:hover {
             background: rgba(255,215,0,0.1);
             box-shadow: 0 0 30px rgba(255,215,0,0.3);
         }
 
-        /* ===== FEEDBACK ===== */
+        /* Feedback */
         .feedback {
             margin-top: 20px;
             padding: 15px;
@@ -329,12 +389,14 @@
             display: none;
             font-weight: bold;
         }
+
         .feedback.success {
             display: block;
             background: rgba(0,255,157,0.1);
             border: 2px solid var(--terminal-green);
             color: var(--terminal-green);
         }
+
         .feedback.error {
             display: block;
             background: rgba(255,59,111,0.1);
@@ -342,35 +404,14 @@
             color: var(--accent);
         }
 
-        /* ===== AUTO NEXT INDICATOR ===== */
-        .auto-next-indicator {
-            text-align: center;
-            margin-top: 15px;
-            color: var(--terminal-gold);
-            font-size: 0.9rem;
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-        .auto-next-indicator.visible {
-            opacity: 1;
-        }
-
-        /* ===== FUN FACT ===== */
-        .fun-fact {
-            font-size: 0.8rem;
-            color: var(--text-secondary);
-            margin-top: 10px;
-            text-align: center;
-            opacity: 0.8;
-        }
-
-        /* ===== NAVIGATION ===== */
+        /* Navigation */
         .nav-terminal {
             display: flex;
             gap: 15px;
             justify-content: center;
             margin-top: 30px;
         }
+
         .nav-link {
             background: transparent;
             border: 2px solid var(--terminal-blue);
@@ -381,30 +422,76 @@
             font-weight: bold;
             transition: all 0.3s;
             cursor: pointer;
-            display: inline-block;
-            font-family: inherit;
         }
+
         .nav-link:hover:not(.disabled) {
             border-color: var(--terminal-gold);
             color: var(--terminal-gold);
             transform: translateY(-2px);
         }
+
         .nav-link.disabled {
             opacity: 0.3;
             cursor: not-allowed;
             pointer-events: none;
         }
 
+        /* Loading Animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,215,0,0.3);
+            border-radius: 50%;
+            border-top-color: var(--terminal-gold);
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Auto Next Indicator */
+        .auto-next-indicator {
+            text-align: center;
+            margin-top: 15px;
+            color: var(--terminal-gold);
+            font-size: 0.9rem;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .auto-next-indicator.visible {
+            opacity: 1;
+        }
+
+        /* Fun Facts */
+        .fun-fact {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-top: 10px;
+            text-align: center;
+            opacity: 0.7;
+        }
+
         @media (max-width: 768px) {
-            .quiz-area { padding: 20px; }
-            .smart-emoji { font-size: 4rem; }
-            .question-text { font-size: 1rem; }
+            .quiz-area {
+                padding: 20px;
+            }
+            
+            .smart-emoji {
+                font-size: 5rem;
+            }
+            
+            .question-text {
+                font-size: 1rem;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- HEADER -->
+        <!-- Terminal Header -->
         <div class="terminal-header">
             <div class="path">
                 <span>root@host</span>:<span style="color: var(--terminal-blue);">/smart_quiz/</span>
@@ -412,339 +499,1285 @@
             <div class="key-panel">
                 <span class="count" id="keyCount">5</span>
                 <span style="color: var(--text-secondary);">KEYS</span>
-                <button class="key-btn" id="useKeyBtn">USE_KEY</button>
+                <button class="key-btn" id="useKeyBtn" onclick="useKey()">USE_KEY</button>
             </div>
         </div>
 
-        <!-- QUIZ AREA -->
+        <!-- Main Quiz Area -->
         <div class="quiz-area">
             <div class="level-info">
                 <span class="level-badge" id="levelBadge">LEVEL_001</span>
                 <span class="category" id="category">📚 PENGETAHUAN</span>
             </div>
 
+            <!-- Smart Display -->
             <div class="smart-container">
                 <div class="smart-emoji" id="smartEmoji">🧠</div>
                 <div class="smart-title" id="smartTitle">"BRAIN TEASER"</div>
             </div>
 
+            <!-- Question Text -->
             <div class="question-text" id="questionText">
-                Memuat pertanyaan...
+                Initializing smart question...
             </div>
 
+            <!-- Key Reveal Section -->
             <div class="key-reveal" id="keyReveal">
                 <div class="answer-hidden" id="keyAnswer"></div>
             </div>
 
+            <!-- Input Area -->
             <div class="input-area">
-                <input type="text" class="terminal-input" id="answerInput" placeholder=">_ KETIK JAWABANMU" autocomplete="off">
-                <button class="btn-execute" id="checkAnswerBtn">
+                <input type="text" class="terminal-input" id="answerInput" placeholder=">_ ENTER_YOUR_ANSWER" autocomplete="off">
+                <button class="btn-execute" onclick="checkAnswer()">
                     <span>⏎ CHECK_ANSWER</span>
                 </button>
             </div>
 
+            <!-- Feedback -->
             <div class="feedback" id="feedback"></div>
             
+            <!-- Auto Next Indicator -->
             <div class="auto-next-indicator" id="autoNextIndicator">
-                ⚡ MEMUAT LEVEL BERIKUTNYA... ⚡
+                ⚡ LOADING NEXT LEVEL... ⚡
             </div>
             
+            <!-- Fun Fact -->
             <div class="fun-fact" id="funFact">
-                "Ilmu itu lebih baik daripada harta."
+                "Ilmu itu lebih baik daripada harta, karena ilmu menjagamu, sedangkan harta harus kau jaga."
             </div>
         </div>
 
-        <!-- NAVIGATION -->
+        <!-- Navigation -->
         <div class="nav-terminal">
-            <a class="nav-link" id="prevBtn">⟵ PREV</a>
+            <a class="nav-link" id="prevBtn" onclick="navigate(-1)">⟵ PREV</a>
             <a href="index.html" class="nav-link">⟐ EXIT</a>
-            <a class="nav-link" id="nextBtn">NEXT ⟶</a>
+            <a class="nav-link" id="nextBtn" onclick="navigate(1)">NEXT ⟶</a>
         </div>
     </div>
 
     <script>
-        (function() {
-            // ========== DATABASE SOAL (120 LEVEL LENGKAP) ==========
-            const smartDB = [
-                // 1-20 Agama Islam
-                {level:1, emoji:"🕋", title:"RUKUN ISLAM", question:"> Ada berapa rukun Islam?", answer:"5", hint:"Syahadat, shalat, zakat, puasa, haji", category:"🏆 AGAMA ISLAM", funFact:"Rukun Islam adalah 5 pondasi utama."},
-                {level:2, emoji:"🕌", title:"IBADAH WAJIB", question:"> Shalat fardhu sehari semalam berapa rakaat?", answer:"17", hint:"Subuh 2, Dzuhur 4, Ashar 4, Maghrib 3, Isya 4", category:"🏆 AGAMA ISLAM", funFact:"Total 17 rakaat setiap hari."},
-                {level:3, emoji:"📖", title:"KITAB SUCI", question:"> Surah yang disebut 'Ummul Qur'an'?", answer:"alfatihah", hint:"Surah pertama", category:"🏆 AGAMA ISLAM", funFact:"Al-Fatihah wajib dibaca setiap rakaat."},
-                {level:4, emoji:"🌙", title:"BULAN MULIA", question:"> Bulan diwajibkan puasa Ramadan?", answer:"ramadan", hint:"Bulan ke-9 Hijriah", category:"🏆 AGAMA ISLAM", funFact:"Puasa Ramadan rukun Islam."},
-                {level:5, emoji:"🤲", title:"HARI RAYA", question:"> Setelah puasa Ramadan merayakan?", answer:"idulfitri", hint:"1 Syawal", category:"🏆 AGAMA ISLAM", funFact:"Idul Fitri hari kemenangan."},
-                {level:6, emoji:"🐑", title:"HARI RAYA KURBAN", question:"> Idul Adha juga disebut?", answer:"hari raya kurban", hint:"10 Dzulhijjah", category:"🏆 AGAMA ISLAM", funFact:"Idul Adha hari raya kurban."},
-                {level:7, emoji:"🕋", title:"IBADAH HAJI", question:"> Kakbah berada di kota?", answer:"mekah", hint:"Kota suci", category:"🏆 AGAMA ISLAM", funFact:"Kakbah kiblat umat Islam."},
-                {level:8, emoji:"📿", title:"MALAIKAT", question:"> Malaikat penyampai wahyu?", answer:"jibril", hint:"Kekuatan Allah", category:"🏆 AGAMA ISLAM", funFact:"Jibril disebut Ruhul Qudus."},
-                {level:9, emoji:"🕊️", title:"NABI TERAKHIR", question:"> Nabi terakhir dalam Islam?", answer:"muhammad", hint:"Lahir di Mekah", category:"🏆 AGAMA ISLAM", funFact:"Nabi Muhammad penutup para nabi."},
-                {level:10, emoji:"👼", title:"NABI PERTAMA", question:"> Nabi pertama diciptakan?", answer:"adam", hint:"Dari tanah", category:"🏆 AGAMA ISLAM", funFact:"Adam manusia pertama."},
-                {level:11, emoji:"🚢", title:"NABI DAN BAHTERA", question:"> Nabi pembuat bahtera besar?", answer:"nuh", hint:"Banjir bandang", category:"🏆 AGAMA ISLAM", funFact:"Nabi Nuh berdakwah 950 tahun."},
-                {level:12, emoji:"🔥", title:"DIBAKAR TIDAK MATI", question:"> Nabi tidak hangus dibakar Namrud?", answer:"ibrahim", hint:"Bapak para nabi", category:"🏆 AGAMA ISLAM", funFact:"Api menjadi dingin."},
-                {level:13, emoji:"🗣️", title:"BICARA HEWAN", question:"> Nabi bisa bicara dengan hewan?", answer:"sulaiman", hint:"Anak Daud", category:"🏆 AGAMA ISLAM", funFact:"Nabi Sulaiman mengerti bahasa burung."},
-                {level:14, emoji:"🐟", title:"DITELAN IKAN", question:"> Nabi ditelan ikan paus?", answer:"yunus", hint:"Berdoa dalam perut ikan", category:"🏆 AGAMA ISLAM", funFact:"Doa Nabi Yunus sangat terkenal."},
-                {level:15, emoji:"👑", title:"RAJA DAN NABI", question:"> Nabi yang juga raja?", answer:"sulaiman", hint:"Kuasa atas jin", category:"🏆 AGAMA ISLAM", funFact:"Kerajaan Nabi Sulaiman sangat luas."},
-                {level:16, emoji:"🪨", title:"AIR DARI BATU", question:"> Nabi memukul batu keluar air?", answer:"musa", hint:"12 mata air", category:"🏆 AGAMA ISLAM", funFact:"Batu mengikuti Nabi Musa."},
-                {level:17, emoji:"👁️", title:"KEKUATAN MATA", question:"> Nabi bisa melihat pasukan gajah?", answer:"isa", hint:"Lahir tanpa ayah", category:"🏆 AGAMA ISLAM", funFact:"Nabi Isa bisa menghidupkan orang mati."},
-                {level:18, emoji:"🧵", title:"PANDAI MENJAHIT", question:"> Nabi pandai menjahit?", answer:"idris", hint:"Nabi ke-2", category:"🏆 AGAMA ISLAM", funFact:"Nabi Idris pandai menulis."},
-                {level:19, emoji:"🐪", title:"NABI DENGAN UNTA", question:"> Nabi dengan mukjizat unta dari batu?", answer:"shaleh", hint:"Kaum Tsamud", category:"🏆 AGAMA ISLAM", funFact:"Unta betina tanda kebesaran Allah."},
-                {level:20, emoji:"🌴", title:"NABI DAN KURMA", question:"> Nabi disuruh menggetarkan pohon kurma?", answer:"isa", hint:"Ibunya Maryam", category:"🏆 AGAMA ISLAM", funFact:"Maryam melahirkan di bawah pohon kurma."},
-                // 21-40 IPS
-                {level:21, emoji:"🌏", title:"BENUA TERBESAR", question:"> Benua terluas di dunia?", answer:"asia", hint:"48 negara", category:"🌍 IPS", funFact:"Asia 30% luas daratan."},
-                {level:22, emoji:"🇮🇩", title:"NEGARA KITA", question:"> Indonesia merdeka tanggal?", answer:"17 agustus 1945", hint:"Bulan Agustus 1945", category:"🌍 IPS", funFact:"Proklamasi oleh Soekarno-Hatta."},
-                {level:23, emoji:"🏛️", title:"PANCASILA", question:"> Sila ke-2 Pancasila?", answer:"2", hint:"Rantai emas", category:"🌍 IPS", funFact:"Dirumuskan BPUPKI."},
-                {level:24, emoji:"🗿", title:"CANDI BOROBUDUR", question:"> Candi Borobudur di provinsi?", answer:"jawa tengah", hint:"Dekat Jogja", category:"🌍 IPS", funFact:"Candi Buddha terbesar di dunia."},
-                {level:25, emoji:"🏝️", title:"PULAU TERBESAR", question:"> Pulau terbesar di Indonesia?", answer:"kalimantan", hint:"Borneo", category:"🌍 IPS", funFact:"Kalimantan 5 provinsi."},
-                {level:26, emoji:"🌋", title:"GUNUNG TERTINGGI", question:"> Gunung tertinggi di Indonesia?", answer:"jayawijaya", hint:"Papua, bersalju", category:"🌍 IPS", funFact:"Puncak Jaya salut abadi."},
-                {level:27, emoji:"🏙️", title:"IBUKOTA", question:"> Ibukota Indonesia sekarang?", answer:"jakarta", hint:"Akan pindah ke IKN", category:"🌍 IPS", funFact:"Jakarta padat penduduk."},
-                {level:28, emoji:"🌊", title:"LAUT TERDALAM", question:"> Laut terdalam di dunia?", answer:"mariana", hint:"Palung Mariana", category:"🌍 IPS", funFact:"Kedalaman 11 km."},
-                {level:29, emoji:"🏜️", title:"GURUN TERLUAS", question:"> Gurun terluas di dunia?", answer:"sahara", hint:"Afrika Utara", category:"🌍 IPS", funFact:"Luas hampir sama China."},
-                {level:30, emoji:"🏔️", title:"PEGUNUNGAN", question:"> Pegunungan tertinggi di dunia?", answer:"himalaya", hint:"Ada Everest", category:"🌍 IPS", funFact:"Himalaya naik 5 mm/tahun."},
-                {level:31, emoji:"🏝️", title:"NEGARA KEPULAUAN", question:"> Jumlah pulau Indonesia sekitar?", answer:"17000", hint:"16-18 ribu", category:"🌍 IPS", funFact:"6000 pulau berpenghuni."},
-                {level:32, emoji:"🏊", title:"SAMUDERA", question:"> Samudera terluas?", answer:"pasifik", hint:"1/3 bumi", category:"🌍 IPS", funFact:"Luas 165 juta km²."},
-                {level:33, emoji:"🏛️", title:"BENDERA MERAH PUTIH", question:"> Warna merah bendera Indonesia?", answer:"keberanian", hint:"Putih kesucian", category:"🌍 IPS", funFact:"Dijahit Fatmawati."},
-                {level:34, emoji:"🦏", title:"HEWAN LANGKA", question:"> Badak bercula satu di?", answer:"ujung kulon", hint:"Ujung Kulon", category:"🌍 IPS", funFact:"Badak Jawa tersisa ~70 ekor."},
-                {level:35, emoji:"🐉", title:"KOMODO", question:"> Komodo di NTT?", answer:"nusa tenggara timur", hint:"Pulau Komodo", category:"🌍 IPS", funFact:"Kadal terbesar di dunia."},
-                {level:36, emoji:"⛰️", title:"GUNUNG BERAPI", question:"> Gunung berapi paling aktif?", answer:"merapi", hint:"Jateng-Jogja", category:"🌍 IPS", funFact:"Meletus 2-5 tahun sekali."},
-                {level:37, emoji:"🌾", title:"SAWAH", question:"> Provinsi penghasil beras terbesar?", answer:"jawa barat", hint:"Irigasi teknis", category:"🌍 IPS", funFact:"Jabar lumbung padi."},
-                {level:38, emoji:"🪔", title:"CANDI PRAMBANAN", question:"> Candi Prambanan corak?", answer:"hindu", hint:"Dewa Trimurti", category:"🌍 IPS", funFact:"Candi Hindu terbesar di Indonesia."},
-                {level:39, emoji:"🌡️", title:"IKLIM TROPIS", question:"> Indonesia beriklim?", answer:"tropis", hint:"Panas lembab", category:"🌍 IPS", funFact:"Suhu 26-28°C."},
-                {level:40, emoji:"⏰", title:"ZONA WAKTU", question:"> Zona waktu Indonesia?", answer:"3", hint:"WIB,WITA,WIT", category:"🌍 IPS", funFact:"Dulu 4 zona."},
-                // 41-60 LUCU
-                {level:41, emoji:"🦷", title:"GIGI LUCU", question:"> Kenapa gigi bisa tumbuh?", answer:"karena mau makan", hint:"Biar ngunyah", category:"😄 LUCU", funFact:"Gigi tumbuh 2 kali seumur hidup."},
-                {level:42, emoji:"👃", title:"HIDUNG", question:"> Kenapa hidung dua lubang?", answer:"biar bisa kentut", hint:"Bercanda", category:"😄 LUCU", funFact:"Hidung bisa bedakan 1 triliun aroma."},
-                {level:43, emoji:"👁️", title:"MATA", question:"> Mata berkaca-kaca?", answer:"mau nangis", hint:"Atau ketawa", category:"😄 LUCU", funFact:"Berkedip 15-20x/menit."},
-                {level:44, emoji:"💪", title:"OTOT", question:"> Orang suka olahraga badannya?", answer:"otot", hint:"Kebalikan lemes", category:"😄 LUCU", funFact:"Senyum pakai 17 otot."},
-                {level:45, emoji:"🧠", title:"OTAK", question:"> Otak dipake mikir terus?", answer:"pusing", hint:"Butuh istirahat", category:"😄 LUCU", funFact:"86 miliar sel saraf."},
-                {level:46, emoji:"🍚", title:"NASI", question:"> Nasi paling enak?", answer:"nasi goreng", hint:"Bisa ditambah telur", category:"😄 LUCU", funFact:"Nasi goreng favorit Indonesia."},
-                {level:47, emoji:"🍜", title:"MIE", question:"> Mie yang bikin kangen?", answer:"mie aceh", hint:"Atau instan", category:"😄 LUCU", funFact:"Indonesia konsumen mie terbesar ke-2."},
-                {level:48, emoji:"🥘", title:"RENDANG", question:"> Rendang dari?", answer:"padang", hint:"Minang", category:"😄 LUCU", funFact:"Rendang terenak di dunia."},
-                {level:49, emoji:"🍢", title:"SATE", question:"> Sate paling sehat?", answer:"sate kambing", hint:"Atau ayam", category:"😄 LUCU", funFact:"50 variasi sate di Indonesia."},
-                {level:50, emoji:"🥤", title:"ES TEH", question:"> Minuman nasional?", answer:"es teh", hint:"Manis", category:"😄 LUCU", funFact:"60 juta gelas/hari."},
-                {level:51, emoji:"🏃", title:"OLAHRAGA", question:"> Olahraga paling berat?", answer:"angkat beban", hint:"Bikin otot", category:"😄 LUCU", funFact:"Terberat gulat sumo."},
-                {level:52, emoji:"⚽", title:"SEPAK BOLA", question:"> Tim yang ditakuti pemain bola?", answer:"macet", hint:"Di jalan tol", category:"😄 LUCU", funFact:"Sepak bola modern dari Inggris."},
-                {level:53, emoji:"🎮", title:"GAME", question:"> Game bikin emosi?", answer:"mobile legends", hint:"Tim AFK", category:"😄 LUCU", funFact:"3 miliar orang main game."},
-                {level:54, emoji:"📱", title:"HP", question:"> Beda HP sama manusia?", answer:"hp bisa di cas", hint:"Manusia makan", category:"😄 LUCU", funFact:"Buka HP 150x/hari."},
-                {level:55, emoji:"💻", title:"KOMPUTER", question:"> Kenapa komputer cepat panas?", answer:"karena suka rebahan", hint:"Dipake terus", category:"😄 LUCU", funFact:"Komputer pertama sebesar ruangan."},
-                {level:56, emoji:"🐔", title:"AYAM", question:"> Kenapa ayam berkokok subuh?", answer:"bangunin sahur", hint:"Kasihan puasa", category:"😄 LUCU", funFact:"Ayam punya jam biologis."},
-                {level:57, emoji:"🐱", title:"KUCING", question:"> Kucing kalau jatuh?", answer:"nempel", hint:"Karena lem", category:"😄 LUCU", funFact:"Bisa berputar di udara."},
-                {level:58, emoji:"🐶", title:"ANJING", question:"> Anjing paling kecil?", answer:"anjing menggonggong", hint:"Kecil suaranya", category:"😄 LUCU", funFact:"Chihuahua 1-3 kg."},
-                {level:59, emoji:"🐘", title:"GAJAH", question:"> Gajah belalainya pendek?", answer:"gajah kekecilan", hint:"Bayi", category:"😄 LUCU", funFact:"Hamil 22 bulan."},
-                {level:60, emoji:"🦒", title:"JERAPAH", question:"> Kenapa leher jerapah panjang?", answer:"biar bisa nyopet", hint:"Jangkauan jauh", category:"😄 LUCU", funFact:"7 ruas tulang leher."},
-                // 61-80 SAINS
-                {level:61, emoji:"🧪", title:"ILMU", question:"> H2O adalah?", answer:"air", hint:"Diminum", category:"🔬 SAINS", funFact:"Air tutupi 71% bumi."},
-                {level:62, emoji:"🌞", title:"TATA SURYA", question:"> Planet terbesar?", answer:"jupiter", hint:"Raja planet", category:"🔬 SAINS", funFact:"Muai 1300 bumi."},
-                {level:63, emoji:"🌕", title:"BULAN", question:"> Satelit alami bumi?", answer:"bulan", hint:"Malam", category:"🔬 SAINS", funFact:"Menjauh 3,8 cm/th."},
-                {level:64, emoji:"⚡", title:"LISTRIK", question:"> Penemu listrik?", answer:"thomas edison", hint:"Atau Faraday", category:"🔬 SAINS", funFact:"Listrik 300.000 km/d."},
-                {level:65, emoji:"💡", title:"LAMPU", question:"> Lampu pijar ditemukan?", answer:"thomas edison", hint:"1879", category:"🔬 SAINS", funFact:"Gagal 1000 kali."},
-                {level:66, emoji:"📞", title:"TELEPON", question:"> Penemu telepon?", answer:"alexander graham bell", hint:"Panggil asisten", category:"🔬 SAINS", funFact:"Bell juga detektor logam."},
-                {level:67, emoji:"✈️", title:"PESAWAT", question:"> Pesawat pertama?", answer:"wright bersaudara", hint:"Orville, Wilbur", category:"🔬 SAINS", funFact:"Terbang 12 detik."},
-                {level:68, emoji:"🚗", title:"MOBIL", question:"> Mobil pertama?", answer:"karl benz", hint:"Jerman, 3 roda", category:"🔬 SAINS", funFact:"Benz paten 1886."},
-                {level:69, emoji:"🖥️", title:"KOMPUTER", question:"> Bapak komputer?", answer:"alan turing", hint:"Inggris", category:"🔬 SAINS", funFact:"Pecah kode Nazi."},
-                {level:70, emoji:"🌍", title:"BUMI", question:"> Lapisan ozon lindungi dari?", answer:"sinar ultraviolet", hint:"Sinar berbahaya", category:"🔬 SAINS", funFact:"Lubang ozon mengecil."},
-                {level:71, emoji:"🌡️", title:"SUHU", question:"> Air mendidih?", answer:"100 derajat celsius", hint:"1 atm", category:"🔬 SAINS", funFact:"Di gunung lebih cepat."},
-                {level:72, emoji:"❄️", title:"SUHU DINGIN", question:"> Air membeku?", answer:"0 derajat celsius", hint:"Jadi es", category:"🔬 SAINS", funFact:"Es lebih ringan."},
-                {level:73, emoji:"🌪️", title:"ANGIN", question:"> Angin puting beliung?", answer:"tornado", hint:"Corong", category:"🔬 SAINS", funFact:"Bisa 500 km/j."},
-                {level:74, emoji:"🌊", title:"GELOMBANG", question:"> Tsunami disebabkan?", answer:"gempa bawah laut", hint:"Atau letusan", category:"🔬 SAINS", funFact:"800 km/jam."},
-                {level:75, emoji:"⛰️", title:"GUNUNG", question:"> Gunung tertinggi di dunia?", answer:"everest", hint:"8848 m", category:"🔬 SAINS", funFact:"Naik 4 mm/th."},
-                {level:76, emoji:"🦠", title:"VIRUS", question:"> COVID-19 pertama?", answer:"china", hint:"Wuhan", category:"🔬 SAINS", funFact:"Corona jenis baru."},
-                {level:77, emoji:"💉", title:"VAKSIN", question:"> Vaksin pertama?", answer:"cacar", hint:"Smallpox", category:"🔬 SAINS", funFact:"Edward Jenner 1796."},
-                {level:78, emoji:"🩸", title:"GOLONGAN DARAH", question:"> Penerima universal?", answer:"ab", hint:"Bisa terima semua", category:"🔬 SAINS", funFact:"O donor universal."},
-                {level:79, emoji:"🧬", title:"DNA", question:"> DNA manusia 50% sama?", answer:"pisang", hint:"Buah kuning", category:"🔬 SAINS", funFact:"DNA 99,9% sama manusia."},
-                {level:80, emoji:"🔬", title:"MIKROSKOP", question:"> Penemu mikroskop?", answer:"antonie van leeuwenhoek", hint:"Belanda", category:"🔬 SAINS", funFact:"Bapak mikrobiologi."},
-                // 81-100 unik
-                {level:81, emoji:"🐫", title:"UNTA", question:"> Unta simpan air di?", answer:"punuk", hint:"Lemak", category:"🐫 UNIK", funFact:"Minum 100 L/10 menit."},
-                {level:82, emoji:"🦓", title:"ZEBRA", question:"> Zebra hitam garis putih?", answer:"hitam bergaris putih", hint:"Kulit hitam", category:"🦓 UNIK", funFact:"Pola garis unik."},
-                {level:83, emoji:"🦛", title:"KUDANIL", question:"> Kuda nil bisa lari lebih cepat dari?", answer:"manusia", hint:"Meski gemuk", category:"🦛 UNIK", funFact:"Paling mematikan di Afrika."},
-                {level:84, emoji:"🦏", title:"BADAK", question:"> Cula badak dari?", answer:"rambut", hint:"Bukan tulang", category:"🦏 UNIK", funFact:"Sama dengan kuku manusia."},
-                {level:85, emoji:"🦍", title:"GORILA", question:"> Gorila tidur di?", answer:"pohon", hint:"Buat sarang", category:"🦍 UNIK", funFact:"DNA 98% sama manusia."},
-                {level:86, emoji:"🍫", title:"COKLAT", question:"> Coklat beracun untuk?", answer:"anjing", hint:"Juga kucing", category:"🍫 UNIK", funFact:"Theobromin beracun."},
-                {level:87, emoji:"🥑", title:"ALPUKAT", question:"> Alpukat termasuk?", answer:"buah", hint:"Sering dianggap sayur", category:"🥑 UNIK", funFact:"Lemak sehat."},
-                {level:88, emoji:"🍅", title:"TOMAT", question:"> Tomat termasuk?", answer:"buah", hint:"Berry", category:"🍅 UNIK", funFact:"Buah berry botani."},
-                {level:89, emoji:"🥜", title:"KACANG", question:"> Kacang tanah bukan kacang, tapi?", answer:"kacang-kacangan", hint:"Legum", category:"🥜 UNIK", funFact:"Tumbuh dalam tanah."},
-                {level:90, emoji:"🍯", title:"MADU", question:"> Madu tidak pernah?", answer:"basi", hint:"Awet", category:"🍯 UNIK", funFact:"Ditemukan di makam Mesir."},
-                {level:91, emoji:"🧂", title:"GARAM", question:"> Garam dulu digunakan sebagai?", answer:"mata uang", hint:"Bayar gaji", category:"🧂 UNIK", funFact:"Salary dari salarium."},
-                {level:92, emoji:"🫒", title:"MINYAK ZAITUN", question:"> Minyak zaitun baik untuk?", answer:"jantung", hint:"Juga rambut", category:"🫒 UNIK", funFact:"Pohon zaitun bisa ribuan tahun."},
-                {level:93, emoji:"🧀", title:"KEJU", question:"> Keju termahal dari susu?", answer:"keledai", hint:"Pule Serbia", category:"🧀 UNIK", funFact:"$1000 per kg."},
-                {level:94, emoji:"🍷", title:"ANGUR", question:"> Angur difermentasi jadi?", answer:"anggur", hint:"Minuman keras", category:"🍷 UNIK", funFact:"10.000 varietas."},
-                {level:95, emoji:"🍺", title:"BIR", question:"> Bir minuman tertua?", answer:"ya", hint:"5000 SM", category:"🍺 UNIK", funFact:"Dulu pengganti air."},
-                {level:96, emoji:"🧋", title:"BUBBLE TEA", question:"> Bubble tea dari?", answer:"taiwan", hint:"1980-an", category:"🧋 UNIK", funFact:"Disebut boba."},
-                {level:97, emoji:"🍦", title:"ES KRIM", question:"> Es krim pertama di?", answer:"china", hint:"2000 tahun lalu", category:"🍦 UNIK", funFact:"Dari susu dan salju."},
-                {level:98, emoji:"🍩", title:"DONAT", question:"> Donat berlubang karena?", answer:"matang merata", hint:"Biar cepat masak", category:"🍩 UNIK", funFact:"Donat pertama tidak berlubang."},
-                {level:99, emoji:"🥐", title:"CROISSANT", question:"> Croissant dari?", answer:"prancis", hint:"Bulan sabit", category:"🥐 UNIK", funFact:"Croissant artinya bulan sabit."},
-                {level:100, emoji:"🥖", title:"BAGUETTE", question:"> Baguette panjangnya?", answer:"65 cm", hint:"Sekitar lengan", category:"🥖 UNIK", funFact:"Diatur hukum Prancis."}
-            ];
+        // Database teka-teki serius, lucu, dan edukatif (120 level)
+        const smartDB = [
+            // ============== BAGIAN 1: PENGETAHUAN AGAMA ISLAM (Level 1-20) ==============
+            {
+                level: 1,
+                emoji: "🕋",
+                title: "RUKUN ISLAM",
+                question: "> Ada berapa rukun Islam?",
+                answer: "5",
+                hint: "Syahadat, shalat, zakat, puasa, haji",
+                category: "🏆 AGAMA ISLAM",
+                funFact: "Rukun Islam adalah 5 pondasi utama dalam agama Islam."
+            },
+            {
+                level: 2,
+                emoji: "🕌",
+                title: "IBADAH WAJIB",
+                question: "> Shalat fardhu dalam sehari semalam ada berapa rakaat?",
+                answer: "17",
+                hint: "Subuh (2), Dzuhur (4), Ashar (4), Maghrib (3), Isya (4)",
+                category: "🏆 AGAMA ISLAM",
+                funFact: "Total 17 rakaat yang harus dikerjakan setiap hari!"
+            },
+            {
+                level: 3,
+                emoji: "📖",
+                title: "KITAB SUCI",
+                question: "> Surah apa yang disebut 'Ummul Qur'an' (Induknya Al-Qur'an)?",
+                answer: "alfatihah",
+                hint: "Surah pertama dalam Al-Qur'an",
+                category: "🏆 AGAMA ISLAM",
+                funFact: "Al-Fatihah wajib dibaca dalam setiap rakaat shalat."
+            },
+            {
+                level: 4,
+                emoji: "🌙",
+                title: "BULAN MULIA",
+                question: "> Bulan apa yang diwajibkan puasa Ramadan?",
+                answer: "ramadan",
+                hint: "Bulan ke-9 dalam kalender Hijriah",
+                category: "🏆 AGAMA ISLAM",
+                funFact: "Puasa Ramadan adalah salah satu rukun Islam."
+            },
+            {
+                level: 5,
+                emoji: "🤲",
+                title: "HARI RAYA",
+                question: "> Setelah puasa Ramadan, umat Islam merayakan hari raya?",
+                answer: "idulfitri",
+                hint: "Hari kemenangan setelah sebulan berpuasa",
+                category: "🏆 AGAMA ISLAM",
+                funFact: "Idul Fitri jatuh pada 1 Syawal."
+            },
+            {
+                level: 6,
+                emoji: "🐑",
+                title: "HARI RAYA KURBAN",
+                question: "> Hari raya Idul Adha juga dikenal dengan sebutan?",
+                answer: "hari raya kurban",
+                hint: "Berkaitan dengan penyembelihan hewan",
+                category: "🏆 AGAMA ISLAM",
+                funFact: "Idul Adha jatuh pada 10 Dzulhijjah."
+            },
+            {
+                level: 7,
+                emoji: "🕋",
+                title: "IBADAH HAJI",
+                question: "> Kakbah berada di kota mana?",
+                answer: "mekah",
+                hint: "Kota suci umat Islam di Arab Saudi",
+                category: "🏆 AGAMA ISLAM",
+                funFact: "Kakbah adalah kiblat umat Islam di seluruh dunia."
+            },
+            {
+                level: 8,
+                emoji: "📿",
+                title: "MALAIKAT",
+                question: "> Siapa malaikat yang bertugas menyampaikan wahyu?",
+                answer: "jibril",
+                hint: "Namanya berarti 'kekuatan Allah'",
+                category: "🏆 AGAMA ISLAM",
+                funFact: "Jibril juga disebut Ruhul Qudus."
+            },
+            {
+                level: 9,
+                emoji: "🕊️",
+                title: "NABI TERAKHIR",
+                question: "> Nabi terakhir dalam Islam adalah?",
+                answer: "muhammad",
+                hint: "Nabi yang lahir di Mekah",
+                category: "🏆 AGAMA ISLAM",
+                funFact: "Nabi Muhammad SAW adalah 'Khatamul Anbiya' (penutup para nabi)."
+            },
+            {
+                level: 10,
+                emoji: "👼",
+                title: "NABI PERTAMA",
+                question: "> Nabi pertama yang diciptakan Allah adalah?",
+                answer: "adam",
+                hint: "Diciptakan dari tanah",
+                category: "🏆 AGAMA ISLAM",
+                funFact: "Adam adalah manusia pertama dan khalifah di bumi."
+            },
+            {
+                level: 11,
+                emoji: "🚢",
+                title: "NABI DAN BAHTERA",
+                question: "> Nabi yang membuat bahtera besar karena banjir bandang?",
+                answer: "nuh",
+                hint: "Bahteranya menyelamatkan umatnya",
+                category: "🏆 AGAMA ISLAM",
+                funFact: "Nabi Nuh berdakwah selama 950 tahun!"
+            },
+            {
+                level: 12,
+                emoji: "🔥",
+                title: "DIBAKAR TIDAK MATI",
+                question: "> Nabi yang tidak hangus dibakar api oleh Raja Namrud?",
+                answer: "ibrahim",
+                hint: "Bapak para nabi",
+                category: "🏆 AGAMA ISLAM",
+                funFact: "Api menjadi dingin atas perintah Allah."
+            },
+            {
+                level: 13,
+                emoji: "🗣️",
+                title: "BISA BICARA DENGAN HEWAN",
+                question: "> Nabi yang bisa berbicara dengan hewan dan memimpin pasukan semut?",
+                answer: "sulaiman",
+                hint: "Anak dari Nabi Daud",
+                category: "🏆 AGAMA ISLAM",
+                funFact: "Nabi Sulaiman juga bisa memahami bahasa burung."
+            },
+            {
+                level: 14,
+                emoji: "🐟",
+                title: "DITELAN IKAN",
+                question: "> Nabi yang ditelan ikan paus karena meninggalkan kaumnya?",
+                answer: "yunus",
+                hint: "Berdoa dalam perut ikan",
+                category: "🏆 AGAMA ISLAM",
+                funFact: "Nabi Yunus berdoa 'La ilaha illa anta subhanaka inni kuntu minaz zalimin'."
+            },
+            {
+                level: 15,
+                emoji: "👑",
+                title: "RAJA DAN NABI",
+                question: "> Nabi yang juga seorang raja dan memiliki kerajaan sangat luas?",
+                answer: "sulaiman",
+                hint: "Bisa menundukkan jin dan angin",
+                category: "🏆 AGAMA ISLAM",
+                funFact: "Nabi Sulaiman memiliki istana yang sangat megah."
+            },
+            {
+                level: 16,
+                emoji: "🪨",
+                title: "MENGELUARKAN AIR DARI BATU",
+                question: "> Nabi yang memukul batu dengan tongkat lalu keluar 12 mata air?",
+                answer: "musa",
+                hint: "Melawan Firaun",
+                category: "🏆 AGAMA ISLAM",
+                funFact: "Batu itu mengikuti Nabi Musa ke mana pun pergi."
+            },
+            {
+                level: 17,
+                emoji: "👁️",
+                title: "KEKUATAN MATA",
+                question: "> Nabi yang memiliki kekuatan mata sehingga bisa melihat pasukan gajah?",
+                answer: "isa",
+                hint: "Bisa menghidupkan orang mati dengan izin Allah",
+                category: "🏆 AGAMA ISLAM",
+                funFact: "Nabi Isa lahir tanpa ayah."
+            },
+            {
+                level: 18,
+                emoji: "🧵",
+                title: "NABI YANG PANDAI MENJAHIT",
+                question: "> Nabi yang pandai menjahit baju dari ranting pohon?",
+                answer: "idris",
+                hint: "Nabi ke-2 setelah Adam",
+                category: "🏆 AGAMA ISLAM",
+                funFact: "Nabi Idris adalah orang pertama yang pandai menulis."
+            },
+            {
+                level: 19,
+                emoji: "🐪",
+                title: "NABI DENGAN UNTA",
+                question: "> Nabi yang mukjizatnya mengeluarkan unta betina dari batu?",
+                answer: "shaleh",
+                hint: "Kaum Tsamud yang durhaka",
+                category: "🏆 AGAMA ISLAM",
+                funFact: "Unta itu menjadi tanda kebesaran Allah."
+            },
+            {
+                level: 20,
+                emoji: "🌴",
+                title: "NABI DAN KURMA",
+                question: "> Nabi yang disuruh menggetarkan pohon kurma saat melahirkan?",
+                answer: "isa",
+                hint: "Ibunya adalah Maryam",
+                category: "🏆 AGAMA ISLAM",
+                funFact: "Maryam melahirkan Nabi Isa di bawah pohon kurma."
+            },
 
-            // Generate 101-120 (campuran)
-            for (let i = 101; i <= 120; i++) {
-                let q, a, cat, em;
-                if (i % 3 === 0) {
-                    q = "> Siapa nabi yang diberi mukjizat membelah bulan?";
-                    a = "muhammad"; cat = "🏆 AGAMA ISLAM"; em = "🌙";
-                } else if (i % 3 === 1) {
-                    q = "> Negara 'Negeri Tirai Bambu'?";
-                    a = "china"; cat = "🌍 IPS"; em = "🎋";
-                } else {
-                    q = "> Kenapa harus tersenyum?";
-                    a = "biar bahagia"; cat = "😄 LUCU"; em = "😊";
+            // ============== BAGIAN 2: ILMU PENGETAHUAN SOSIAL (Level 21-40) ==============
+            {
+                level: 21,
+                emoji: "🌏",
+                title: "BENUA TERBESAR",
+                question: "> Benua apa yang terluas di dunia?",
+                answer: "asia",
+                hint: "Ada 48 negara di sini",
+                category: "🌍 IPS",
+                funFact: "Asia mencakup 30% luas daratan dunia."
+            },
+            {
+                level: 22,
+                emoji: "🇮🇩",
+                title: "NEGARA KITA",
+                question: "> Indonesia merdeka pada tanggal?",
+                answer: "17 agustus 1945",
+                hint: "Bulan Agustus tahun 1945",
+                category: "🌍 IPS",
+                funFact: "Proklamasi dibacakan oleh Soekarno-Hatta."
+            },
+            {
+                level: 23,
+                emoji: "🏛️",
+                title: "PANCASILA",
+                question: "> Sila ke berapa 'Kemanusiaan yang Adil dan Beradab'?",
+                answer: "2",
+                hint: "Lambangnya rantai emas",
+                category: "🌍 IPS",
+                funFact: "Pancasila dirumuskan oleh BPUPKI."
+            },
+            {
+                level: 24,
+                emoji: "🗿",
+                title: "CANDI BOROBUDUR",
+                question: "> Candi Borobudur berada di provinsi mana?",
+                answer: "jawa tengah",
+                hint: "Dekat dengan Yogyakarta",
+                category: "🌍 IPS",
+                funFact: "Borobudur adalah candi Buddha terbesar di dunia."
+            },
+            {
+                level: 25,
+                emoji: "🏝️",
+                title: "PULAU TERBESAR",
+                question: "> Pulau terbesar di Indonesia adalah?",
+                answer: "kalimantan",
+                hint: "Dulu disebut Borneo",
+                category: "🌍 IPS",
+                funFact: "Kalimantan dibagi menjadi 5 provinsi."
+            },
+            {
+                level: 26,
+                emoji: "🌋",
+                title: "GUNUNG TERTINGGI",
+                question: "> Gunung tertinggi di Indonesia adalah?",
+                answer: "jayawijaya",
+                hint: "Berada di Papua, puncaknya bersalju",
+                category: "🌍 IPS",
+                funFact: "Puncak Jaya memiliki salut abadi di khatulistiwa."
+            },
+            {
+                level: 27,
+                emoji: "🏙️",
+                title: "IBUKOTA",
+                question: "> Ibukota Indonesia sekarang adalah?",
+                answer: "jakarta",
+                hint: "Kota dengan banyak gedung pencakar langit",
+                category: "🌍 IPS",
+                funFact: "Jakarta akan pindah ke IKN Nusantara."
+            },
+            {
+                level: 28,
+                emoji: "🌊",
+                title: "LAUT TERDALAM",
+                question: "> Laut terdalam di dunia adalah?",
+                answer: "mariana",
+                hint: "Namanya seperti nama orang",
+                category: "🌍 IPS",
+                funFact: "Kedalaman Palung Mariana mencapai 11 km."
+            },
+            {
+                level: 29,
+                emoji: "🏜️",
+                title: "GURUN TERLUAS",
+                question: "> Gurun terluas di dunia adalah?",
+                answer: "sahara",
+                hint: "Di Afrika Utara",
+                category: "🌍 IPS",
+                funFact: "Luas Sahara hampir sama dengan luas China."
+            },
+            {
+                level: 30,
+                emoji: "🏔️",
+                title: "PEGUNUNGAN",
+                question: "> Pegunungan tertinggi di dunia adalah?",
+                answer: "himalaya",
+                hint: "Tempatnya Gunung Everest",
+                category: "🌍 IPS",
+                funFact: "Himalaya masih naik 5 mm per tahun."
+            },
+            {
+                level: 31,
+                emoji: "🏝️",
+                title: "NEGARA KEPULAUAN",
+                question: "> Indonesia adalah negara kepulauan dengan jumlah pulau sekitar?",
+                answer: "17000",
+                hint: "Antara 16-18 ribu",
+                category: "🌍 IPS",
+                funFact: "Sekitar 6000 pulau berpenghuni."
+            },
+            {
+                level: 32,
+                emoji: "🏊",
+                title: "SAMUDERA",
+                question: "> Samudera terluas di dunia adalah?",
+                answer: "pasifik",
+                hint: "Mencakup 1/3 permukaan bumi",
+                category: "🌍 IPS",
+                funFact: "Luasnya 165 juta km persegi."
+            },
+            {
+                level: 33,
+                emoji: "🏛️",
+                title: "BENDERA MERAH PUTIH",
+                question: "> Warna merah pada bendera Indonesia melambangkan?",
+                answer: "keberanian",
+                hint: "Sedangkan putih melambangkan kesucian",
+                category: "🌍 IPS",
+                funFact: "Bendera pusaka dijahit oleh Ibu Fatmawati."
+            },
+            {
+                level: 34,
+                emoji: "🦏",
+                title: "HEWAN LANGKA",
+                question: "> Hewan khas Indonesia yang terancam punah, ada cula di hidung?",
+                answer: "badak bercula satu",
+                hint: "Hidup di Ujung Kulon",
+                category: "🌍 IPS",
+                funFact: "Badak Jawa hanya tersisa sekitar 70 ekor."
+            },
+            {
+                level: 35,
+                emoji: "🐉",
+                title: "KOMODO",
+                question: "> Komodo hanya bisa ditemukan di Indonesia bagian mana?",
+                answer: "nusa tenggara timur",
+                hint: "Pulau Komodo, Rinca, Flores",
+                category: "🌍 IPS",
+                funFact: "Komodo adalah kadal terbesar di dunia."
+            },
+            {
+                level: 36,
+                emoji: "⛰️",
+                title: "GUNUNG BERAPI",
+                question: "> Gunung berapi paling aktif di Indonesia adalah?",
+                answer: "merapi",
+                hint: "Di perbatasan Jateng dan Jogja",
+                category: "🌍 IPS",
+                funFact: "Merapi meletus setiap 2-5 tahun sekali."
+            },
+            {
+                level: 37,
+                emoji: "🌾",
+                title: "SAWAH",
+                question: "> Provinsi penghasil beras terbesar di Indonesia?",
+                answer: "jawa barat",
+                hint: "Dengan irigasi teknis",
+                category: "🌍 IPS",
+                funFact: "Jawa Barat disebut lumbung padi nasional."
+            },
+            {
+                level: 38,
+                emoji: "🪔",
+                title: "CANDI PRAMBANAN",
+                question: "> Candi Prambanan adalah candi bercorak?",
+                answer: "hindu",
+                hint: "Dewa Trimurti: Brahma, Wisnu, Siwa",
+                category: "🌍 IPS",
+                funFact: "Prambanan adalah candi Hindu terbesar di Indonesia."
+            },
+            {
+                level: 39,
+                emoji: "🌡️",
+                title: "IKLIM TROPIS",
+                question: "> Indonesia beriklim?",
+                answer: "tropis",
+                hint: "Panas dan lembab sepanjang tahun",
+                category: "🌍 IPS",
+                funFact: "Suhu rata-rata 26-28 derajat Celsius."
+            },
+            {
+                level: 40,
+                emoji: "⏰",
+                title: "ZONA WAKTU",
+                question: "> Indonesia memiliki berapa zona waktu?",
+                answer: "3",
+                hint: "WIB, WITA, WIT",
+                category: "🌍 IPS",
+                funFact: "Dulu ada 4 zona waktu sebelum 1988."
+            },
+
+            // ============== BAGIAN 3: PENGETAHUAN UMUM LUCU (Level 41-60) ==============
+            {
+                level: 41,
+                emoji: "🦷",
+                title: "GIGI LUCU",
+                question: "> Kenapa gigi bisa tumbuh?",
+                answer: "karena mau makan",
+                hint: "Biar bisa ngunyah bakso",
+                category: "😄 LUCU",
+                funFact: "Gigi manusia tumbuh 2 kali seumur hidup."
+            },
+            {
+                level: 42,
+                emoji: "👃",
+                title: "HIDUNG",
+                question: "> Kenapa hidung punya dua lubang?",
+                answer: "biar bisa kentut",
+                hint: "Kalau satu lubang namanya bukan hidung",
+                category: "😄 LUCU",
+                funFact: "Hidung bisa membedakan 1 triliun aroma."
+            },
+            {
+                level: 43,
+                emoji: "👁️",
+                title: "MATA",
+                question: "> Kalau mata berkaca-kaca, itu namanya?",
+                answer: "mau nangis",
+                hint: "Atau lagi nonton drama Korea",
+                category: "😄 LUCU",
+                funFact: "Manusia berkedip 15-20 kali per menit."
+            },
+            {
+                level: 44,
+                emoji: "💪",
+                title: "OTOT",
+                question: "> Orang yang suka olahraga badannya?",
+                answer: "otot",
+                hint: "Kebalikan dari lemes",
+                category: "😄 LUCU",
+                funFact: "Senyum menggunakan 17 otot wajah."
+            },
+            {
+                level: 45,
+                emoji: "🧠",
+                title: "OTAK",
+                question: "> Kalau otak dipake mikir terus, jadinya?",
+                answer: "pusing",
+                hint: "Butuh istirahat",
+                category: "😄 LUCU",
+                funFact: "Otak manusia punya 86 miliar sel saraf."
+            },
+            {
+                level: 46,
+                emoji: "🍚",
+                title: "NASI",
+                question: "> Nasi apa yang paling enak dimakan?",
+                answer: "nasi goreng",
+                hint: "Bisa ditambah telur",
+                category: "😄 LUCU",
+                funFact: "Nasi goreng adalah masakan favorit Indonesia."
+            },
+            {
+                level: 47,
+                emoji: "🍜",
+                title: "MIE",
+                question: "> Mie apa yang bikin kangen?",
+                answer: "mie aceh",
+                hint: "Bukan, mie instan",
+                category: "😄 LUCU",
+                funFact: "Indonesia adalah konsumen mie instan terbesar ke-2 dunia."
+            },
+            {
+                level: 48,
+                emoji: "🥘",
+                title: "RENDANG",
+                question: "> Rendang berasal dari daerah mana?",
+                answer: "padang",
+                hint: "Minangkabau",
+                category: "😄 LUCU",
+                funFact: "Rendang juara makanan terenak di dunia."
+            },
+            {
+                level: 49,
+                emoji: "🍢",
+                title: "SATE",
+                question: "> Sate apa yang paling sehat?",
+                answer: "sate kambing",
+                hint: "Atau sate ayam",
+                category: "😄 LUCU",
+                funFact: "Sate punya 50 variasi di Indonesia."
+            },
+            {
+                level: 50,
+                emoji: "🥤",
+                title: "ES TEH",
+                question: "> Minuman nasional orang Indonesia?",
+                answer: "es teh",
+                hint: "Manisnya pas",
+                category: "😄 LUCU",
+                funFact: "Es teh dikonsumsi 60 juta gelas per hari."
+            },
+            {
+                level: 51,
+                emoji: "🏃",
+                title: "OLAHRAGA",
+                question: "> Olahraga apa yang paling berat?",
+                answer: "angkat beban",
+                hint: "Bisa bikin otot",
+                category: "😄 LUCU",
+                funFact: "Olahraga terberat adalah gulat sumo."
+            },
+            {
+                level: 52,
+                emoji: "⚽",
+                title: "SEPAK BOLA",
+                question: "> Tim apa yang paling ditakuti pemain bola?",
+                answer: "macet",
+                hint: "Di jalan tol",
+                category: "😄 LUCU",
+                funFact: "Sepak bola modern berasal dari Inggris."
+            },
+            {
+                level: 53,
+                emoji: "🎮",
+                title: "GAME",
+                question: "> Game apa yang paling bikin emosi?",
+                answer: "mobile legends",
+                hint: "Timnya pada afk",
+                category: "😄 LUCU",
+                funFact: "Game online dimainkan 3 miliar orang di dunia."
+            },
+            {
+                level: 54,
+                emoji: "📱",
+                title: "HP",
+                question: "> Apa bedanya HP sama manusia?",
+                answer: "hp bisa di cas",
+                hint: "Manusia perlu makan",
+                category: "😄 LUCU",
+                funFact: "Rata-rata orang buka HP 150 kali sehari."
+            },
+            {
+                level: 55,
+                emoji: "💻",
+                title: "KOMPUTER",
+                question: "> Kenapa komputer cepat panas?",
+                answer: "karena suka rebahan",
+                hint: "Dipake terus",
+                category: "😄 LUCU",
+                funFact: "Komputer pertama sebesar ruangan."
+            },
+            {
+                level: 56,
+                emoji: "🐔",
+                title: "AYAM",
+                question: "> Kenapa ayam berkokok subuh?",
+                answer: "bangunin sahur",
+                hint: "Kasihan yang puasa",
+                category: "😄 LUCU",
+                funFact: "Ayam punya jam biologis internal."
+            },
+            {
+                level: 57,
+                emoji: "🐱",
+                title: "KUCING",
+                question: "> Kucing kalau jatuh selalu?",
+                answer: "nempel",
+                hint: "Karena lem",
+                category: "😄 LUCU",
+                funFact: "Kucing bisa berputar di udara saat jatuh."
+            },
+            {
+                level: 58,
+                emoji: "🐶",
+                title: "ANJING",
+                question: "> Anjing apa yang paling kecil?",
+                answer: "anjing menggonggong",
+                hint: "Kecil suaranya",
+                category: "😄 LUCU",
+                funFact: "Anjing chihuahua beratnya cuma 1-3 kg."
+            },
+            {
+                level: 59,
+                emoji: "🐘",
+                title: "GAJAH",
+                question: "> Gajah apa yang belalainya pendek?",
+                answer: "gajah kekecilan",
+                hint: "Masih bayi",
+                category: "😄 LUCU",
+                funFact: "Gajah hamil selama 22 bulan."
+            },
+            {
+                level: 60,
+                emoji: "🦒",
+                title: "JERAPAH",
+                question: "> Kenapa jerapah lehernya panjang?",
+                answer: "biar bisa nyopet",
+                hint: "Jangkauannya jauh",
+                category: "😄 LUCU",
+                funFact: "Leher jerapah punya 7 ruas tulang."
+            },
+
+            // ============== BAGIAN 4: CERDAS CERMAT (Level 61-80) ==============
+            {
+                level: 61,
+                emoji: "🧪",
+                title: "ILMU PENGETAHUAN",
+                question: "> H2O adalah rumus kimia dari?",
+                answer: "air",
+                hint: "Yang kita minum setiap hari",
+                category: "🔬 SAINS",
+                funFact: "Air menutupi 71% permukaan bumi."
+            },
+            {
+                level: 62,
+                emoji: "🌞",
+                title: "TATA SURYA",
+                question: "> Planet terbesar di tata surya adalah?",
+                answer: "jupiter",
+                hint: "Dia raja planet",
+                category: "🔬 SAINS",
+                funFact: "Jupiter bisa muat 1.300 bumi."
+            },
+            {
+                level: 63,
+                emoji: "🌕",
+                title: "BULAN",
+                question: "> Satelit alami bumi adalah?",
+                answer: "bulan",
+                hint: "Sinar di malam hari",
+                category: "🔬 SAINS",
+                funFact: "Bulan menjauh 3,8 cm per tahun."
+            },
+            {
+                level: 64,
+                emoji: "⚡",
+                title: "LISTRIK",
+                question: "> Penemu listrik adalah?",
+                answer: "thomas edison",
+                hint: "Bukan, Michael Faraday",
+                category: "🔬 SAINS",
+                funFact: "Listrik mengalir 300.000 km per detik."
+            },
+            {
+                level: 65,
+                emoji: "💡",
+                title: "LAMPU",
+                question: "> Lampu pijar ditemukan oleh?",
+                answer: "thomas edison",
+                hint: "Tahun 1879",
+                category: "🔬 SAINS",
+                funFact: "Edison gagal 1000 kali sebelum berhasil."
+            },
+            {
+                level: 66,
+                emoji: "📞",
+                title: "TELEPON",
+                question: "> Penemu telepon adalah?",
+                answer: "alexander graham bell",
+                hint: "Panggilan pertama ke asistennya",
+                category: "🔬 SAINS",
+                funFact: "Bell juga menemukan detektor logam."
+            },
+            {
+                level: 67,
+                emoji: "✈️",
+                title: "PESAWAT",
+                question: "> Pesawat pertama ditemukan oleh?",
+                answer: "wright bersaudara",
+                hint: "Orville dan Wilbur",
+                category: "🔬 SAINS",
+                funFact: "Penerbangan pertama cuma 12 detik."
+            },
+            {
+                level: 68,
+                emoji: "🚗",
+                title: "MOBIL",
+                question: "> Mobil pertama ditemukan oleh?",
+                answer: "karl benz",
+                hint: "Jerman",
+                category: "🔬 SAINS",
+                funFact: "Mobil pertama punya 3 roda."
+            },
+            {
+                level: 69,
+                emoji: "🖥️",
+                title: "KOMPUTER",
+                question: "> Bapak komputer dunia adalah?",
+                answer: "alan turing",
+                hint: "Ilmuwan Inggris",
+                category: "🔬 SAINS",
+                funFact: "Turing memecahkan kode Nazi."
+            },
+            {
+                level: 70,
+                emoji: "🌍",
+                title: "BUMI",
+                question: "> Lapisan ozon berfungsi melindungi bumi dari?",
+                answer: "sinar ultraviolet",
+                hint: "Sinar berbahaya dari matahari",
+                category: "🔬 SAINS",
+                funFact: "Lubang ozon semakin mengecil."
+            },
+            {
+                level: 71,
+                emoji: "🌡️",
+                title: "SUHU",
+                question: "> Air mendidih pada suhu?",
+                answer: "100 derajat celsius",
+                hint: "Di permukaan laut",
+                category: "🔬 SAINS",
+                funFact: "Di gunung, air mendidih lebih cepat."
+            },
+            {
+                level: 72,
+                emoji: "❄️",
+                title: "SUHU DINGIN",
+                question: "> Air membeku pada suhu?",
+                answer: "0 derajat celsius",
+                hint: "Jadi es",
+                category: "🔬 SAINS",
+                funFact: "Es lebih ringan dari air."
+            },
+            {
+                level: 73,
+                emoji: "🌪️",
+                title: "ANGIN",
+                question: "> Angin puting beliung disebut juga?",
+                answer: "tornado",
+                hint: "Berbentuk corong",
+                category: "🔬 SAINS",
+                funFact: "Tornado bisa mencapai 500 km/jam."
+            },
+            {
+                level: 74,
+                emoji: "🌊",
+                title: "GELOMBANG",
+                question: "> Tsunami disebabkan oleh?",
+                answer: "gempa bawah laut",
+                hint: "Atau letusan gunung berapi",
+                category: "🔬 SAINS",
+                funFact: "Tsunami bisa melaju 800 km/jam."
+            },
+            {
+                level: 75,
+                emoji: "⛰️",
+                title: "GUNUNG",
+                question: "> Gunung tertinggi di dunia adalah?",
+                answer: "everest",
+                hint: "8.848 meter",
+                category: "🔬 SAINS",
+                funFact: "Everest naik 4 mm per tahun."
+            },
+            {
+                level: 76,
+                emoji: "🦠",
+                title: "VIRUS",
+                question: "> Virus COVID-19 pertama kali muncul di negara?",
+                answer: "china",
+                hint: "Kota Wuhan",
+                category: "🔬 SAINS",
+                funFact: "COVID-19 adalah virus corona jenis baru."
+            },
+            {
+                level: 77,
+                emoji: "💉",
+                title: "VAKSIN",
+                question: "> Vaksin pertama ditemukan untuk penyakit?",
+                answer: "cacar",
+                hint: "Smallpox",
+                category: "🔬 SAINS",
+                funFact: "Vaksin ditemukan Edward Jenner tahun 1796."
+            },
+            {
+                level: 78,
+                emoji: "🩸",
+                title: "GOLONGAN DARAH",
+                question: "> Golongan darah yang bisa menerima semua donor adalah?",
+                answer: "ab",
+                hint: "Penerima universal",
+                category: "🔬 SAINS",
+                funFact: "Golongan O bisa donor ke semua."
+            },
+            {
+                level: 79,
+                emoji: "🧬",
+                title: "DNA",
+                question: "> DNA manusia 50% sama dengan?",
+                answer: "pisang",
+                hint: "Buah kuning",
+                category: "🔬 SAINS",
+                funFact: "DNA manusia 99,9% sama antar manusia."
+            },
+            {
+                level: 80,
+                emoji: "🔬",
+                title: "MIKROSKOP",
+                question: "> Penemu mikroskop adalah?",
+                answer: "antonie van leeuwenhoek",
+                hint: "Ilmuwan Belanda",
+                category: "🔬 SAINS",
+                funFact: "Leeuwenhoek adalah 'Bapak Mikrobiologi'."
+            },
+
+            // ============== BAGIAN 5: MIX SERIUS LUCU (Level 81-120) ==============
+            {
+                level: 81,
+                emoji: "🐫",
+                title: "UNTA",
+                question: "> Unta menyimpan air di?",
+                answer: "punuk",
+                hint: "Bukan, itu lemak",
+                category: "🐫 PENGETAHUAN UNIK",
+                funFact: "Unta bisa minum 100 liter dalam 10 menit."
+            },
+            {
+                level: 82,
+                emoji: "🦓",
+                title: "ZEBRA",
+                question: "> Zebra itu hitam bergaris putih atau putih bergaris hitam?",
+                answer: "hitam bergaris putih",
+                hint: "Kulit dasarnya hitam",
+                category: "🦓 PENGETAHUAN UNIK",
+                funFact: "Setiap zebra punya pola garis unik."
+            },
+            {
+                level: 83,
+                emoji: "🦛",
+                title: "KUDANIL",
+                question: "> Kuda nil bisa berlari lebih cepat dari?",
+                answer: "manusia",
+                hint: "Mereka cepat meski gemuk",
+                category: "🦛 PENGETAHUAN UNIK",
+                funFact: "Kuda nil adalah hewan paling mematikan di Afrika."
+            },
+            {
+                level: 84,
+                emoji: "🦏",
+                title: "BADAK",
+                question: "> Cula badak terbuat dari?",
+                answer: "rambut",
+                hint: "Bukan tulang",
+                category: "🦏 PENGETAHUAN UNIK",
+                funFact: "Cula badak sama dengan kuku manusia."
+            },
+            {
+                level: 85,
+                emoji: "🦍",
+                title: "GORILA",
+                question: "> Gorila tertidur di?",
+                answer: "pohon",
+                hint: "Mereka buat sarang",
+                category: "🦍 PENGETAHUAN UNIK",
+                funFact: "Gorila punya DNA 98% sama manusia."
+            },
+            {
+                level: 86,
+                emoji: "🍫",
+                title: "COKLAT",
+                question: "> Coklat bisa beracun untuk hewan?",
+                answer: "anjing",
+                hint: "Dan kucing",
+                category: "🍫 PENGETAHUAN UNIK",
+                funFact: "Theobromine dalam coklat beracun untuk anjing."
+            },
+            {
+                level: 87,
+                emoji: "🥑",
+                title: "ALPUKAT",
+                question: "> Alpukat termasuk jenis?",
+                answer: "buah",
+                hint: "Atau sayur? Buah!",
+                category: "🥑 PENGETAHUAN UNIK",
+                funFact: "Alpukat punya lemak sehat."
+            },
+            {
+                level: 88,
+                emoji: "🍅",
+                title: "TOMAT",
+                question: "> Tomat termasuk?",
+                answer: "buah",
+                hint: "Sering dianggap sayur",
+                category: "🍅 PENGETAHUAN UNIK",
+                funFact: "Tomat adalah buah berry secara botani."
+            },
+            {
+                level: 89,
+                emoji: "🥜",
+                title: "KACANG",
+                question: "> Kacang tanah bukan kacang, tapi?",
+                answer: "kacang-kacangan",
+                hint: "Legum",
+                category: "🥜 PENGETAHUAN UNIK",
+                funFact: "Kacang tanah tumbuh di dalam tanah."
+            },
+            {
+                level: 90,
+                emoji: "🍯",
+                title: "MADU",
+                question: "> Madu tidak pernah?",
+                answer: "basi",
+                hint: "Bisa awet ribuan tahun",
+                category: "🍯 PENGETAHUAN UNIK",
+                funFact: "Madu ditemukan di makam Mesir kuno dan masih bisa dimakan."
+            },
+            {
+                level: 91,
+                emoji: "🧂",
+                title: "GARAM",
+                question: "> Garam dulu digunakan sebagai?",
+                answer: "mata uang",
+                hint: "Bayar gaji",
+                category: "🧂 PENGETAHUAN UNIK",
+                funFact: "Kata 'salary' dari bahasa Latin 'salarium' (garam)."
+            },
+            {
+                level: 92,
+                emoji: "🫒",
+                title: "MINYAK ZAITUN",
+                question: "> Minyak zaitun baik untuk?",
+                answer: "jantung",
+                hint: "Juga untuk rambut",
+                category: "🫒 PENGETAHUAN UNIK",
+                funFact: "Zaitun bisa hidup ribuan tahun."
+            },
+            {
+                level: 93,
+                emoji: "🧀",
+                title: "KEJU",
+                question: "> Keju paling mahal di dunia dibuat dari susu?",
+                answer: "keledai",
+                hint: "Hewan mirip kuda",
+                category: "🧀 PENGETAHUAN UNIK",
+                funFact: "Keju pule di Serbia seharga $1000 per kg."
+            },
+            {
+                level: 94,
+                emoji: "🍷",
+                title: "ANGUR",
+                question: "> Angur bisa difermentasi jadi?",
+                answer: "anggur",
+                hint: "Minuman keras",
+                category: "🍷 PENGETAHUAN UNIK",
+                funFact: "Ada 10.000 varietas anggur di dunia."
+            },
+            {
+                level: 95,
+                emoji: "🍺",
+                title: "BIR",
+                question: "> Bir adalah minuman beralkohol tertua di dunia?",
+                answer: "ya",
+                hint: "Sudah ada 5000 SM",
+                category: "🍺 PENGETAHUAN UNIK",
+                funFact: "Bir dulu diminum sebagai pengganti air."
+            },
+            {
+                level: 96,
+                emoji: "🧋",
+                title: "BUBBLE TEA",
+                question: "> Bubble tea berasal dari negara?",
+                answer: "taiwan",
+                hint: "Tahun 1980-an",
+                category: "🧋 PENGETAHUAN UNIK",
+                funFact: "Bubble tea disebut juga 'boba'."
+            },
+            {
+                level: 97,
+                emoji: "🍦",
+                title: "ES KRIM",
+                question: "> Es krim pertama dibuat di?",
+                answer: "china",
+                hint: "2000 tahun lalu",
+                category: "🍦 PENGETAHUAN UNIK",
+                funFact: "Es krim dulu dibuat dari susu dan salju."
+            },
+            {
+                level: 98,
+                emoji: "🍩",
+                title: "DONAT",
+                question: "> Donat berlubang karena?",
+                answer: "matang merata",
+                hint: "Biar cepet masak",
+                category: "🍩 PENGETAHUAN UNIK",
+                funFact: "Donat pertama tidak berlubang."
+            },
+            {
+                level: 99,
+                emoji: "🥐",
+                title: "CROISSANT",
+                question: "> Croissant berasal dari?",
+                answer: "prancis",
+                hint: "Bentuknya bulan sabit",
+                category: "🥐 PENGETAHUAN UNIK",
+                funFact: "Croissant artinya 'bulan sabit' dalam bahasa Prancis."
+            },
+            {
+                level: 100,
+                emoji: "🥖",
+                title: "BAGUETTE",
+                question: "> Baguette panjangnya biasanya?",
+                answer: "65 cm",
+                hint: "Sekitar lengan",
+                category: "🥖 PENGETAHUAN UNIK",
+                funFact: "Baguette diatur panjangnya oleh hukum Prancis."
+            }
+        ];
+
+        // Generate level 101-120
+        const bonusCategories = ["🔬 SAINS", "🌍 IPS", "🏆 AGAMA ISLAM", "😄 LUCU", "🧠 PENGETAHUAN"];
+        const bonusEmojis = ["🏆", "🌟", "💫", "⭐", "✨", "🎯", "🎲", "🎮", "🎰", "🧩"];
+        
+        for (let i = 101; i <= 120; i++) {
+            const randomEmoji = bonusEmojis[Math.floor(Math.random() * bonusEmojis.length)];
+            const randomCategory = bonusCategories[Math.floor(Math.random() * bonusCategories.length)];
+            
+            let question, answer, hint, funFact;
+            
+            if (i % 3 === 0) {
+                question = "> Siapa nabi yang diberi mukjizat bisa membelah bulan?";
+                answer = "muhammad";
+                hint = "Nabi terakhir";
+                funFact = "Mukjizat membelah bulan terjadi di Mekah.";
+            } else if (i % 3 === 1) {
+                question = "> Negara apa yang dijuluki 'Negeri Tirai Bambu'?";
+                answer = "china";
+                hint = "Penduduk terbanyak";
+                funFact = "China punya 1,4 miliar penduduk.";
+            } else {
+                question = "> Kenapa kita harus tersenyum?";
+                answer = "biar bahagia";
+                hint = "Gratis dan menular";
+                funFact = "Tersenyum melepas endorfin, hormon bahagia.";
+            }
+            
+            smartDB.push({
+                level: i,
+                emoji: randomEmoji,
+                title: `BONUS LEVEL #${i}`,
+                question: question,
+                answer: answer,
+                hint: hint,
+                category: randomCategory,
+                funFact: funFact
+            });
+        }
+
+        // State
+        let currentLevel = 1;
+        let userProgress = { keys: 5, completedLevels: [], currentLevel: 1 };
+        let keyUsed = false;
+        let autoNextTimer = null;
+
+        // Load data
+        function initialize() {
+            // Load progress
+            const saved = localStorage.getItem('hostQuiz_nexus');
+            if (saved) {
+                userProgress = JSON.parse(saved);
+                // Pastikan currentLevel ada di progress
+                if (!userProgress.currentLevel) {
+                    userProgress.currentLevel = 1;
                 }
-                smartDB.push({
-                    level: i, emoji: em, title: `BONUS #${i}`, question: q, answer: a,
-                    hint: "Coba tebak!", category: cat, funFact: "Teruslah belajar!"
-                });
             }
 
-            // ========== STATE ==========
-            let currentLevel = 1;
-            let userProgress = { keys: 5, completedLevels: [], currentLevel: 1 };
-            let keyUsed = false;
-            let autoNextTimer = null;
+            // Get level from URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const levelFromUrl = parseInt(urlParams.get('level'));
+            
+            if (levelFromUrl && !isNaN(levelFromUrl) && levelFromUrl >= 1 && levelFromUrl <= 120) {
+                currentLevel = levelFromUrl;
+            } else {
+                currentLevel = userProgress.currentLevel || 1;
+            }
 
-            // ========== INIT ==========
-            function initialize() {
-                try {
-                    const saved = localStorage.getItem('hostQuiz_offline');
-                    if (saved) {
-                        const parsed = JSON.parse(saved);
-                        userProgress = {
-                            keys: parsed.keys ?? 5,
-                            completedLevels: Array.isArray(parsed.completedLevels) ? parsed.completedLevels : [],
-                            currentLevel: parsed.currentLevel ?? 1
-                        };
+            updateUI();
+        }
+
+        function updateUI() {
+            const levelData = smartDB.find(l => l.level === currentLevel) || smartDB[0];
+            
+            document.getElementById('keyCount').textContent = userProgress.keys;
+            document.getElementById('levelBadge').textContent = `LEVEL_${String(currentLevel).padStart(3, '0')}`;
+            document.getElementById('category').textContent = levelData.category;
+            document.getElementById('smartEmoji').textContent = levelData.emoji;
+            document.getElementById('smartTitle').textContent = `"${levelData.title}"`;
+            document.getElementById('questionText').textContent = levelData.question;
+            document.getElementById('funFact').textContent = `"${levelData.funFact || 'Belajar itu menyenangkan!'}"`;
+            document.getElementById('answerInput').value = '';
+            document.getElementById('keyReveal').classList.remove('visible');
+            document.getElementById('feedback').className = 'feedback';
+            document.getElementById('autoNextIndicator').classList.remove('visible');
+            
+            keyUsed = false;
+            document.getElementById('useKeyBtn').disabled = userProgress.keys <= 0;
+
+            // Update navigasi
+            document.getElementById('prevBtn').classList.toggle('disabled', currentLevel <= 1);
+            document.getElementById('nextBtn').classList.toggle('disabled', currentLevel >= 120);
+            
+            // Update URL tanpa reload
+            const url = new URL(window.location);
+            url.searchParams.set('level', currentLevel);
+            window.history.replaceState({}, '', url);
+        }
+
+        function checkAnswer() {
+            const userAnswer = document.getElementById('answerInput').value.toLowerCase().trim();
+            const levelData = smartDB.find(l => l.level === currentLevel);
+            
+            if (!levelData) return;
+
+            // Jawaban fleksibel (bisa mengandung kata kunci)
+            const isCorrect = userAnswer.includes(levelData.answer.toLowerCase());
+            const feedback = document.getElementById('feedback');
+
+            if (isCorrect) {
+                feedback.className = 'feedback success';
+                feedback.textContent = '✓ PINTAR! Jawaban kamu benar! +10 Ilmu!';
+
+                // Update progress
+                if (!userProgress.completedLevels.includes(currentLevel)) {
+                    userProgress.completedLevels.push(currentLevel);
+                    
+                    // Update current level di progress
+                    if (currentLevel < 120) {
+                        userProgress.currentLevel = currentLevel + 1;
                     }
-                } catch (e) {}
-
-                const urlParams = new URLSearchParams(window.location.search);
-                const levelFromUrl = parseInt(urlParams.get('level'));
-                if (!isNaN(levelFromUrl) && levelFromUrl >= 1 && levelFromUrl <= 120) {
-                    currentLevel = levelFromUrl;
-                } else {
-                    currentLevel = userProgress.currentLevel || 1;
+                    
+                    localStorage.setItem('hostQuiz_nexus', JSON.stringify(userProgress));
                 }
 
+                // Tampilkan indikator auto next
+                document.getElementById('autoNextIndicator').classList.add('visible');
+
+                // Auto next ke level berikutnya setelah 2 detik
+                if (autoNextTimer) clearTimeout(autoNextTimer);
+                
+                autoNextTimer = setTimeout(() => {
+                    if (currentLevel < 120) {
+                        navigate(1);
+                    } else {
+                        // Jika sudah level 120, kembali ke dashboard
+                        window.location.href = 'index.html?completed=120';
+                    }
+                }, 2000);
+            } else {
+                feedback.className = 'feedback error';
+                feedback.textContent = '✗ BELUM TEPAT! Coba lagi, kamu pasti bisa!';
+                
+                // Hapus indikator auto next jika ada
+                document.getElementById('autoNextIndicator').classList.remove('visible');
+            }
+        }
+
+        function useKey() {
+            if (userProgress.keys <= 0) {
+                alert('[!] UPS! KEY HABIS! Tonton iklan atau claim harian ya!');
+                return;
+            }
+
+            if (keyUsed) {
+                alert('[!] Key sudah dipakai untuk level ini!');
+                return;
+            }
+
+            const levelData = smartDB.find(l => l.level === currentLevel);
+            if (!levelData) return;
+
+            // Kurangi key
+            userProgress.keys--;
+            localStorage.setItem('hostQuiz_nexus', JSON.stringify(userProgress));
+
+            // Tampilkan jawaban dengan hint
+            const answerWithHint = `${levelData.answer} (${levelData.hint || 'Petunjuk: pikirkan lagi!'})`;
+            document.getElementById('keyAnswer').textContent = answerWithHint;
+            document.getElementById('keyReveal').classList.add('visible');
+            document.getElementById('useKeyBtn').disabled = true;
+            document.getElementById('keyCount').textContent = userProgress.keys;
+            
+            keyUsed = true;
+        }
+
+        function navigate(direction) {
+            // Hapus timer auto next jika ada
+            if (autoNextTimer) {
+                clearTimeout(autoNextTimer);
+                autoNextTimer = null;
+            }
+
+            const newLevel = currentLevel + direction;
+            if (newLevel >= 1 && newLevel <= 120) {
+                currentLevel = newLevel;
                 updateUI();
             }
+        }
 
-            function updateUI() {
-                const levelData = smartDB.find(l => l.level === currentLevel) || smartDB[0];
-                
-                document.getElementById('keyCount').textContent = userProgress.keys;
-                document.getElementById('levelBadge').textContent = `LEVEL_${String(currentLevel).padStart(3,'0')}`;
-                document.getElementById('category').textContent = levelData.category;
-                document.getElementById('smartEmoji').textContent = levelData.emoji;
-                document.getElementById('smartTitle').textContent = `"${levelData.title}"`;
-                document.getElementById('questionText').textContent = levelData.question;
-                document.getElementById('funFact').textContent = `"${levelData.funFact}"`;
-                document.getElementById('answerInput').value = '';
-                document.getElementById('keyReveal').classList.remove('visible');
-                document.getElementById('feedback').className = 'feedback';
-                document.getElementById('autoNextIndicator').classList.remove('visible');
-                
-                keyUsed = false;
-                document.getElementById('useKeyBtn').disabled = userProgress.keys <= 0;
+        // Initialize on load
+        window.addEventListener('load', initialize);
 
-                document.getElementById('prevBtn').classList.toggle('disabled', currentLevel <= 1);
-                document.getElementById('nextBtn').classList.toggle('disabled', currentLevel >= 120);
-
-                // Update URL
-                const url = new URL(window.location);
-                url.searchParams.set('level', currentLevel);
-                window.history.replaceState({}, '', url);
+        // Enter key to submit
+        document.getElementById('answerInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                checkAnswer();
             }
+        });
 
-            function saveProgress() {
-                try {
-                    localStorage.setItem('hostQuiz_offline', JSON.stringify(userProgress));
-                } catch (e) {}
+        // Keyboard navigation (left/right arrows)
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') {
+                navigate(-1);
+            } else if (e.key === 'ArrowRight') {
+                navigate(1);
             }
-
-            function checkAnswer() {
-                const userAnswer = document.getElementById('answerInput').value.toLowerCase().trim();
-                const levelData = smartDB.find(l => l.level === currentLevel);
-                if (!levelData) return;
-
-                const isCorrect = userAnswer.includes(levelData.answer.toLowerCase());
-                const feedback = document.getElementById('feedback');
-
-                if (isCorrect) {
-                    feedback.className = 'feedback success';
-                    feedback.textContent = '✓ PINTAR! Jawaban benar! +10 Ilmu!';
-
-                    if (!userProgress.completedLevels.includes(currentLevel)) {
-                        userProgress.completedLevels.push(currentLevel);
-                        if (currentLevel < 120) {
-                            userProgress.currentLevel = currentLevel + 1;
-                        }
-                        saveProgress();
-                    }
-
-                    document.getElementById('autoNextIndicator').classList.add('visible');
-                    if (autoNextTimer) clearTimeout(autoNextTimer);
-                    autoNextTimer = setTimeout(() => {
-                        if (currentLevel < 120) {
-                            navigate(1);
-                        } else {
-                            window.location.href = 'index.html?completed=120';
-                        }
-                    }, 1500);
-                } else {
-                    feedback.className = 'feedback error';
-                    feedback.textContent = '✗ BELUM TEPAT! Coba lagi!';
-                    document.getElementById('autoNextIndicator').classList.remove('visible');
-                }
-            }
-
-            function useKey() {
-                if (userProgress.keys <= 0) {
-                    alert('[!] KEYS HABIS! Kembali ke dashboard untuk claim.');
-                    return;
-                }
-                if (keyUsed) {
-                    alert('[!] Key sudah dipakai di level ini.');
-                    return;
-                }
-
-                const levelData = smartDB.find(l => l.level === currentLevel);
-                if (!levelData) return;
-
-                userProgress.keys--;
-                saveProgress();
-                
-                const hintText = levelData.hint ? ` (Petunjuk: ${levelData.hint})` : '';
-                document.getElementById('keyAnswer').textContent = levelData.answer + hintText;
-                document.getElementById('keyReveal').classList.add('visible');
-                document.getElementById('useKeyBtn').disabled = true;
-                document.getElementById('keyCount').textContent = userProgress.keys;
-                keyUsed = true;
-            }
-
-            function navigate(direction) {
-                if (autoNextTimer) clearTimeout(autoNextTimer);
-                const newLevel = currentLevel + direction;
-                if (newLevel >= 1 && newLevel <= 120) {
-                    currentLevel = newLevel;
-                    updateUI();
-                }
-            }
-
-            // ========== EVENT LISTENERS ==========
-            document.getElementById('useKeyBtn').addEventListener('click', useKey);
-            document.getElementById('checkAnswerBtn').addEventListener('click', checkAnswer);
-            document.getElementById('answerInput').addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') {
-                    e.preventDefault();
-                    checkAnswer();
-                }
-            });
-            document.getElementById('prevBtn').addEventListener('click', () => navigate(-1));
-            document.getElementById('nextBtn').addEventListener('click', () => navigate(1));
-
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'ArrowLeft') navigate(-1);
-                else if (e.key === 'ArrowRight') navigate(1);
-            });
-
-            // ========== START ==========
-            initialize();
-        })();
+        });
     </script>
 </body>
 </html>

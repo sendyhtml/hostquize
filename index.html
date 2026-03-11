@@ -831,31 +831,54 @@
         }
 
         // Cek level completion dari URL
-        window.addEventListener('load', () => {
-            loadProgress();
+       // Di bagian window.addEventListener('load', () => { ... })
+window.addEventListener('load', () => {
+    loadProgress();
+    
+    const urlParams = new URLSearchParams(window.location.search);
+    const completed = urlParams.get('completed');
+    if (completed) {
+        const level = parseInt(completed);
+        if (!userProgress.completedLevels.includes(level)) {
+            userProgress.completedLevels.push(level);
             
-            const urlParams = new URLSearchParams(window.location.search);
-            const completed = urlParams.get('completed');
-            if (completed) {
-                const level = parseInt(completed);
-                if (!userProgress.completedLevels.includes(level)) {
-                    userProgress.completedLevels.push(level);
-                    
-                    // Tambah poin setiap selesai level
-                    userProgress.poin += 10;
-                    
-                    if (level < 120 && level === userProgress.currentLevel) {
-                        userProgress.currentLevel = level + 1;
-                    }
-                    saveProgress();
-                    
-                    // Tampilkan pesan poin
-                    setTimeout(() => {
-                        alert(`[✓] LEVEL ${level} COMPLETED! +10 POIN! Total poin: ${userProgress.poin}`);
-                    }, 500);
-                }
+            // Tambah poin setiap selesai level
+            userProgress.poin += 10;
+            
+            if (level < 120 && level === userProgress.currentLevel) {
+                userProgress.currentLevel = level + 1;
             }
-        });
+            saveProgress();
+            
+            // Tampilkan pesan poin
+            setTimeout(() => {
+                alert(`[✓] LEVEL ${level} COMPLETED! +10 POIN! Total poin: ${userProgress.poin}`);
+            }, 500);
+        }
+    }
+    
+    // Hapus parameter URL setelah diproses
+    if (completed) {
+        const url = new URL(window.location);
+        url.searchParams.delete('completed');
+        window.history.replaceState({}, '', url);
+    }
+});
+
+// Tambahkan fungsi untuk refresh poin secara berkala (opsional)
+setInterval(() => {
+    // Reload progress dari localStorage setiap 5 detik
+    const saved = localStorage.getItem('hostQuiz_nexus');
+    if (saved) {
+        const freshProgress = JSON.parse(saved);
+        if (freshProgress.poin !== userProgress.poin) {
+            userProgress = freshProgress;
+            updatePoinDisplay();
+            updateDisplay();
+            renderLevels();
+        }
+    }
+}, 5000);
 
         // Close modal on outside click
         window.onclick = (e) => {

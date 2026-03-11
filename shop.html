@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SHOP KEYS - HOST QUIZ</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700&display=swap');
+
+        :root {
+            --bg-primary: #0a0e1a;
+            --bg-secondary: #0f1524;
+            --text-primary: #00ff9d;
+            --text-secondary: #6c7a96;
+            --accent: #ff3b6f;
+            --accent-glow: rgba(255, 59, 111, 0.3);
+            --terminal-green: #00ff9d;
+            --terminal-blue: #3b8eff;
+            --terminal-purple: #9d3bff;
+            --terminal-gold: #ffd700;
+            --border-color: #1e2638;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        body {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* CRT Effect */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(rgba(0,255,157,0.03) 50%, rgba(0,0,0,0.1) 50%);
+            background-size: 100% 4px;
+            pointer-events: none;
+            z-index: 1000;
+            animation: scanline 8s linear infinite;
+        }
+
+        @keyframes scanline {
+            0% { transform: translateY(-100%); }
+            100% { transform: translateY(100%); }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Poin Display */
+        .poin-header {
+            background: #000000;
+            border: 2px solid var(--terminal-gold);
+            border-radius: 30px;
+            padding: 15px 30px;
+            display: inline-block;
+            margin-bottom: 30px;
+            box-shadow: 0 0 30px rgba(255,215,0,0.3);
+        }
+
+        .poin-header span {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--terminal-gold);
+        }
+
+        .poin-header i {
+            margin-right: 10px;
+            font-size: 2rem;
+        }
+
+        /* Shop Header */
+        .shop-header {
+            text-align: center;
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        .shop-header h1 {
+            font-size: 3rem;
+            background: linear-gradient(135deg, var(--terminal-green), var(--terminal-gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+            text-shadow: 0 0 20px rgba(0,255,157,0.3);
+        }
+
+        .shop-header p {
+            color: var(--text-secondary);
+            font-size: 1rem;
+        }
+
+        .shop-header p::before {
+            content: "✦ ";
+            color: var(--terminal-gold);
+        }
+
+        .shop-header p::after {
+            content: " ✦";
+            color: var(--terminal-gold);
+        }
+
+        /* Shop Grid */
+        .shop-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .shop-item {
+            background: var(--bg-secondary);
+            border: 2px solid var(--border-color);
+            border-radius: 20px;
+            padding: 30px 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .shop-item:hover {
+            transform: translateY(-10px);
+            border-color: var(--terminal-gold);
+            box-shadow: 0 20px 40px rgba(255,215,0,0.2);
+        }
+
+        .shop-item::before {
+            content: "🛒";
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 3rem;
+            opacity: 0.1;
+            transform: rotate(15deg);
+        }
+
+        .shop-item.popular {
+            border-color: var(--terminal-gold);
+            box-shadow: 0 0 30px rgba(255,215,0,0.3);
+        }
+
+        .popular-badge {
+            position: absolute;
+            top: 15px;
+            left: -30px;
+            background: var(--terminal-gold);
+            color: #000000;
+            padding: 5px 40px;
+            transform: rotate(-45deg);
+            font-size: 0.8rem;
+            font-weight: bold;
+            letter-spacing: 2px;
+            box-shadow: 0 0 20px rgba(255,215,0,0.5);
+        }
+
+        .item-emoji {
+            font-size: 5rem;
+            margin-bottom: 15px;
+            filter: drop-shadow(0 0 20px rgba(255,215,0,0.5));
+            animation: emojiFloat 3s ease-in-out infinite;
+        }
+
+        @keyframes emojiFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .item-title {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--terminal-green);
+            margin-bottom: 10px;
+        }
+
+        .item-keys {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--terminal-gold);
+            margin-bottom: 15px;
+            text-shadow: 0 0 20px rgba(255,215,0,0.5);
+        }
+
+        .item-keys small {
+            font-size: 1rem;
+            color: var(--text-secondary);
+        }
+
+        .item-price {
+            background: #000000;
+            border: 2px solid var(--terminal-purple);
+            border-radius: 30px;
+            padding: 10px 20px;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
+        .item-price span {
+            color: var(--terminal-purple);
+            font-size: 1.3rem;
+            font-weight: bold;
+        }
+
+        .item-price i {
+            color: var(--terminal-gold);
+            margin-right: 5px;
+        }
+
+        .buy-btn {
+            width: 100%;
+            padding: 15px;
+            background: transparent;
+            border: 3px solid var(--terminal-green);
+            color: var(--terminal-green);
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .buy-btn::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0,255,157,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .buy-btn:hover::before {
+            left: 100%;
+        }
+
+        .buy-btn:hover {
+            background: rgba(0,255,157,0.1);
+            box-shadow: 0 0 30px rgba(0,255,157,0.3);
+            transform: scale(1.05);
+        }
+
+        .buy-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            border-color: var(--text-secondary);
+        }
+
+        .buy-btn:disabled:hover {
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* Special Offers */
+        .special-section {
+            background: linear-gradient(135deg, rgba(255,215,0,0.1), rgba(157,59,255,0.1));
+            border: 2px solid var(--terminal-gold);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .special-title {
+            font-size: 2rem;
+            color: var(--terminal-gold);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .special-title::before {
+            content: "⭐";
+        }
+
+        .special-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .special-item {
+            background: #000000;
+            border: 2px solid var(--terminal-purple);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .special-item:hover {
+            transform: scale(1.05);
+            border-color: var(--terminal-gold);
+        }
+
+        .special-item h3 {
+            color: var(--terminal-gold);
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+
+        .special-item .keys {
+            font-size: 2rem;
+            color: var(--terminal-green);
+            margin: 10px 0;
+        }
+
+        .special-item .price {
+            background: var(--terminal-purple);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            display: inline-block;
+            margin: 10px 0;
+        }
+
+        .special-buy {
+            width: 100%;
+            padding: 10px;
+            background: transparent;
+            border: 2px solid var(--terminal-gold);
+            color: var(--terminal-gold);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .special-buy:hover {
+            background: rgba(255,215,0,0.1);
+        }
+
+        /* Navigation */
+        .nav-terminal {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 40px;
+        }
+
+        .nav-link {
+            padding: 12px 30px;
+            background: transparent;
+            border: 2px solid var(--terminal-blue);
+            color: var(--terminal-blue);
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .nav-link:hover {
+            border-color: var(--terminal-gold);
+            color: var(--terminal-gold);
+            transform: translateY(-2px);
+        }
+
+        /* Modal */
+        .shop-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background: var(--bg-secondary);
+            border: 3px solid var(--terminal-gold);
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 0 50px rgba(255,215,0,0.5);
+        }
+
+        .modal-emoji {
+            font-size: 5rem;
+            margin-bottom: 20px;
+            animation: modalPop 0.5s ease;
+        }
+
+        @keyframes modalPop {
+            0% { transform: scale(0); }
+            80% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        .modal-title {
+            font-size: 2rem;
+            color: var(--terminal-gold);
+            margin-bottom: 15px;
+        }
+
+        .modal-text {
+            color: var(--text-secondary);
+            margin-bottom: 25px;
+            line-height: 1.6;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .modal-btn {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1rem;
+            transition: all 0.3s;
+            background: transparent;
+        }
+
+        .modal-btn.confirm {
+            border-color: var(--terminal-green);
+            color: var(--terminal-green);
+        }
+
+        .modal-btn.confirm:hover {
+            background: var(--terminal-green);
+            color: #000000;
+        }
+
+        .modal-btn.cancel {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .modal-btn.cancel:hover {
+            background: var(--accent);
+            color: #000000;
+        }
+
+        /* Loading */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,215,0,0.3);
+            border-radius: 50%;
+            border-top-color: var(--terminal-gold);
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            .shop-header h1 {
+                font-size: 2rem;
+            }
+            
+            .shop-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .item-emoji {
+                font-size: 4rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Poin Display -->
+        <div class="poin-header">
+            <span>🏆 <span id="poinDisplay">0</span> POIN</span>
+        </div>
+
+        <!-- Shop Header -->
+        <div class="shop-header">
+            <h1>🛒 KEY SHOP 🛒</h1>
+            <p>TUKARKAN POIN DENGAN KEYS HOST</p>
+        </div>
+
+        <!-- Main Shop Grid -->
+        <div class="shop-grid">
+            <!-- Paket 10 POIN -->
+            <div class="shop-item" onclick="buyItem(10, 2, 'basic')">
+                <div class="item-emoji">🔑</div>
+                <div class="item-title">BASIC PACK</div>
+                <div class="item-keys">2 <small>KEYS</small></div>
+                <div class="item-price">
+                    <span>🏆 10 POIN</span>
+                </div>
+                <button class="buy-btn" id="buyBasic">BELI</button>
+            </div>
+
+            <!-- Paket 20 POIN -->
+            <div class="shop-item popular" onclick="buyItem(20, 5, 'popular')">
+                <div class="popular-badge">POPULER</div>
+                <div class="item-emoji">🔑🔑</div>
+                <div class="item-title">POPULAR PACK</div>
+                <div class="item-keys">5 <small>KEYS</small></div>
+                <div class="item-price">
+                    <span>🏆 20 POIN</span>
+                </div>
+                <button class="buy-btn" id="buyPopular">BELI</button>
+            </div>
+
+            <!-- Paket 30 POIN -->
+            <div class="shop-item" onclick="buyItem(30, 8, 'premium')">
+                <div class="item-emoji">🔑🔑🔑</div>
+                <div class="item-title">PREMIUM PACK</div>
+                <div class="item-keys">8 <small>KEYS</small></div>
+                <div class="item-price">
+                    <span>🏆 30 POIN</span>
+                </div>
+                <button class="buy-btn" id="buyPremium">BELI</button>
+            </div>
+
+            <!-- Paket 40 POIN -->
+            <div class="shop-item" onclick="buyItem(40, 10, 'ultimate')">
+                <div class="item-emoji">👑</div>
+                <div class="item-title">ULTIMATE PACK</div>
+                <div class="item-keys">10 <small>KEYS</small></div>
+                <div class="item-price">
+                    <span>🏆 40 POIN</span>
+                </div>
+                <button class="buy-btn" id="buyUltimate">BELI</button>
+            </div>
+        </div>
+
+        <!-- Special Offers -->
+        <div class="special-section">
+            <div class="special-title">SPECIAL OFFERS</div>
+            <div class="special-grid">
+                <div class="special-item">
+                    <h3>🔥 HEMAT 20%</h3>
+                    <div class="keys">15 KEYS</div>
+                    <div class="price">🏆 50 POIN</div>
+                    <button class="special-buy" onclick="buyItem(50, 15, 'special1')">BELI</button>
+                </div>
+                <div class="special-item">
+                    <h3>⚡ HEMAT 30%</h3>
+                    <div class="keys">25 KEYS</div>
+                    <div class="price">🏆 75 POIN</div>
+                    <button class="special-buy" onclick="buyItem(75, 25, 'special2')">BELI</button>
+                </div>
+                <div class="special-item">
+                    <h3>🚀 HEMAT 50%</h3>
+                    <div class="keys">50 KEYS</div>
+                    <div class="price">🏆 120 POIN</div>
+                    <button class="special-buy" onclick="buyItem(120, 50, 'special3')">BELI</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <div class="nav-terminal">
+            <a href="index.html" class="nav-link">⟵ DASHBOARD</a>
+            <a href="redeem.html" class="nav-link">🎫 REDEEM</a>
+        </div>
+    </div>
+
+    <!-- Modal Konfirmasi -->
+    <div class="shop-modal" id="shopModal">
+        <div class="modal-content">
+            <div class="modal-emoji" id="modalEmoji">🛒</div>
+            <div class="modal-title" id="modalTitle">KONFIRMASI</div>
+            <div class="modal-text" id="modalText"></div>
+            <div class="modal-buttons">
+                <button class="modal-btn confirm" id="modalConfirm">✓ YA</button>
+                <button class="modal-btn cancel" onclick="closeModal()">✗ BATAL</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // User progress
+        let userProgress = {
+            keys: 5,
+            poin: 0
+        };
+
+        // Item yang akan dibeli
+        let currentItem = {
+            poin: 0,
+            keys: 0,
+            name: ''
+        };
+
+        // Load progress
+        function loadProgress() {
+            const saved = localStorage.getItem('hostQuiz_nexus');
+            if (saved) {
+                userProgress = JSON.parse(saved);
+                if (userProgress.poin === undefined) userProgress.poin = 0;
+                if (userProgress.keys === undefined) userProgress.keys = 5;
+            }
+            updateDisplay();
+        }
+
+        function saveProgress() {
+            localStorage.setItem('hostQuiz_nexus', JSON.stringify(userProgress));
+        }
+
+        function updateDisplay() {
+            document.getElementById('poinDisplay').textContent = userProgress.poin;
+            
+            // Update status button berdasarkan poin
+            document.getElementById('buyBasic').disabled = userProgress.poin < 10;
+            document.getElementById('buyPopular').disabled = userProgress.poin < 20;
+            document.getElementById('buyPremium').disabled = userProgress.poin < 30;
+            document.getElementById('buyUltimate').disabled = userProgress.poin < 40;
+        }
+
+        // Fungsi beli item
+        function buyItem(poinCost, keysReward, packName) {
+            if (userProgress.poin < poinCost) {
+                alert(`[!] POIN TIDAK CUKUP! Kamu butuh ${poinCost - userProgress.poin} poin lagi.`);
+                return;
+            }
+
+            // Set current item
+            currentItem = {
+                poin: poinCost,
+                keys: keysReward,
+                name: packName
+            };
+
+            // Tampilkan modal konfirmasi
+            const modal = document.getElementById('shopModal');
+            const modalText = document.getElementById('modalText');
+            modalText.innerHTML = `Tukarkan <span style="color: var(--terminal-gold);">${poinCost} POIN</span> dengan <span style="color: var(--terminal-green);">${keysReward} KEYS</span>?`;
+            
+            // Set emoji berdasarkan pack
+            const emojiMap = {
+                'basic': '🔑',
+                'popular': '🔑🔑',
+                'premium': '🔑🔑🔑',
+                'ultimate': '👑',
+                'special1': '🔥',
+                'special2': '⚡',
+                'special3': '🚀'
+            };
+            document.getElementById('modalEmoji').textContent = emojiMap[packName] || '🛒';
+            
+            modal.style.display = 'flex';
+        }
+
+        // Konfirmasi pembelian
+        function confirmPurchase() {
+            const modal = document.getElementById('shopModal');
+            
+            // Proses pembelian
+            userProgress.poin -= currentItem.poin;
+            userProgress.keys += currentItem.keys;
+            
+            saveProgress();
+            updateDisplay();
+            
+            // Tutup modal
+            modal.style.display = 'none';
+            
+            // Tampilkan animasi sukses
+            showSuccessAnimation();
+        }
+
+        // Tutup modal
+        function closeModal() {
+            document.getElementById('shopModal').style.display = 'none';
+        }
+
+        // Animasi sukses
+        function showSuccessAnimation() {
+            const notif = document.createElement('div');
+            notif.style.cssText = `
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background: linear-gradient(135deg, var(--terminal-green), var(--terminal-gold));
+                color: #000000;
+                padding: 30px 50px;
+                border-radius: 20px;
+                font-size: 2rem;
+                font-weight: bold;
+                z-index: 9999;
+                box-shadow: 0 0 50px rgba(255,215,0,0.8);
+                animation: successPop 1.5s ease-out forwards;
+                text-align: center;
+                border: 3px solid white;
+            `;
+            notif.innerHTML = `✓ PEMBELIAN BERHASIL!<br>+${currentItem.keys} KEYS!`;
+            
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes successPop {
+                    0% { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
+                    20% { opacity: 1; transform: translate(-50%, -50%) scale(1.1); }
+                    40% { transform: translate(-50%, -50%) scale(1); }
+                    80% { opacity: 1; transform: translate(-50%, -80px) scale(1); }
+                    100% { opacity: 0; transform: translate(-50%, -120px) scale(0.8); }
+                }
+            `;
+            
+            document.head.appendChild(style);
+            document.body.appendChild(notif);
+            
+            setTimeout(() => {
+                notif.remove();
+                style.remove();
+            }, 1500);
+        }
+
+        // Set tombol konfirmasi
+        document.getElementById('modalConfirm').onclick = confirmPurchase;
+
+        // Close modal on outside click
+        window.onclick = (e) => {
+            if (e.target.classList.contains('shop-modal')) {
+                closeModal();
+            }
+        };
+
+        // Load progress saat halaman dimuat
+        window.addEventListener('load', loadProgress);
+
+        // Update display setiap 2 detik (untuk sync dengan dashboard)
+        setInterval(loadProgress, 2000);
+    </script>
+</body>
+</html>

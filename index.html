@@ -602,7 +602,76 @@
                 height: 60px;
                 font-size: 2rem;
             }
-        }
+            
+            /* Shop Button - Di atas Redeem */
+.shop-float {
+    position: fixed;
+    bottom: 120px; /* Di atas redeem button */
+    right: 30px;
+    z-index: 1001;
+}
+
+.shop-btn {
+    width: 70px;
+    height: 70px;
+    background: linear-gradient(135deg, var(--terminal-green), var(--terminal-gold));
+    border: 3px solid var(--terminal-purple);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    cursor: pointer;
+    box-shadow: 0 0 30px rgba(0,255,157,0.5);
+    transition: all 0.3s;
+    animation: shopFloat 3s ease-in-out infinite;
+    text-decoration: none;
+    color: white;
+    position: relative;
+}
+
+.shop-btn:hover {
+    transform: scale(1.1) rotate(-5deg);
+    box-shadow: 0 0 50px rgba(0,255,157,0.8);
+    border-color: var(--terminal-gold);
+}
+
+@keyframes shopFloat {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-15px); }
+}
+
+.shop-badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: var(--accent);
+    color: white;
+    font-size: 0.8rem;
+    font-weight: bold;
+    padding: 3px 8px;
+    border-radius: 20px;
+    border: 2px solid var(--terminal-gold);
+    box-shadow: 0 0 10px rgba(255,59,111,0.5);
+}
+
+@media (max-width: 768px) {
+    .shop-float {
+        bottom: 100px;
+        right: 20px;
+    }
+    
+    .shop-btn {
+        width: 60px;
+        height: 60px;
+        font-size: 1.8rem;
+    }
+    
+    .shop-badge {
+        font-size: 0.7rem;
+        padding: 2px 6px;
+    }
+}
     </style>
 </head>
 <body>
@@ -617,10 +686,18 @@
         </div>
     </div>
 
-    <!-- Redeem Button - POJOK KANAN BAWAH -->
-    <div class="redeem-float">
-        <a href="redeem.html" class="redeem-btn" title="REDEEM CODE">🎫</a>
-    </div>
+<!-- Shop Button - Di atas Redeem Button -->
+<div class="shop-float">
+    <a href="shop.html" class="shop-btn" title="SHOP KEYS">
+        <span class="shop-icon">🛒</span>
+        <span class="shop-badge" id="shopPoinBadge">0</span>
+    </a>
+</div>
+
+<!-- Redeem Button - POJOK KANAN BAWAH -->
+<div class="redeem-float">
+    <a href="redeem.html" class="redeem-btn" title="REDEEM CODE">🎫</a>
+</div>
 
     <div class="container">
         <!-- ASCII Header -->
@@ -724,6 +801,18 @@
             if (poin >= 60) return "PINTAR";
             return "PELAJAR";
         }
+        
+        function updatePoinDisplay() {
+    document.getElementById('poinValue').textContent = userProgress.poin;
+    const role = getPoinRole(userProgress.poin);
+    document.getElementById('poinRole').textContent = role;
+    
+    // Update badge shop
+    const shopBadge = document.getElementById('shopPoinBadge');
+    if (shopBadge) {
+        shopBadge.textContent = userProgress.poin;
+    }
+}
 
         // Load dari localStorage
         function loadProgress() {

@@ -1,0 +1,1043 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HOST QUIZ // TERMINAL</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700&display=swap');
+
+        :root {
+            --bg-primary: #0a0e1a;
+            --bg-secondary: #0f1524;
+            --text-primary: #00ff9d;
+            --text-secondary: #6c7a96;
+            --accent: #ff3b6f;
+            --accent-glow: rgba(255, 59, 111, 0.3);
+            --terminal-green: #00ff9d;
+            --terminal-blue: #3b8eff;
+            --terminal-purple: #9d3bff;
+            --terminal-yellow: #ffd93d;
+            --terminal-orange: #ff9d3b;
+            --border-color: #1e2638;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        body {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* CRT Effect */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(rgba(0,255,157,0.02) 50%, rgba(0,0,0,0.1) 50%);
+            background-size: 100% 4px;
+            pointer-events: none;
+            z-index: 1000;
+            animation: scan 10s linear infinite;
+        }
+
+        @keyframes scan {
+            0% { transform: translateY(-100%); }
+            100% { transform: translateY(100%); }
+        }
+
+        /* Grain Effect */
+        body::after {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIj48ZmlsdGVyIGlkPSJmIj48ZmVUdXJidWxlbmNlIHR5cGU9ImZyYWN0YWxOb2lzZSIgYmFzZUZyZXF1ZW5jeT0iLjc0IiBudW1PY3RhdmVzPSIzIiAvPjwvZmlsdGVyPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbHRlcj0idXJsKCNmKSIgb3BhY2l0eT0iMC4wNCIgLz48L3N2Zz4=');
+            pointer-events: none;
+            opacity: 0.15;
+            z-index: 999;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Header Terminal */
+        .terminal-header {
+            background: #000000;
+            border: 2px solid var(--terminal-green);
+            border-radius: 12px 12px 0 0;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            position: relative;
+            box-shadow: 0 -5px 20px rgba(0,255,157,0.1);
+        }
+
+        .terminal-header::before {
+            content: "● ● ●";
+            position: absolute;
+            top: 5px;
+            left: 20px;
+            color: var(--text-secondary);
+            font-size: 12px;
+            letter-spacing: 5px;
+        }
+
+        .path {
+            color: var(--terminal-blue);
+            margin-top: 15px;
+        }
+
+        .path span {
+            color: var(--text-secondary);
+        }
+
+        .path::before {
+            content: "~/$";
+            color: var(--terminal-green);
+            margin-right: 10px;
+        }
+
+        .key-panel {
+            background: rgba(0,255,157,0.05);
+            border: 1px solid var(--terminal-green);
+            border-radius: 8px;
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .key-panel .count {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--terminal-green);
+            text-shadow: 0 0 15px var(--terminal-green);
+        }
+
+        .key-btn {
+            background: transparent;
+            border: 2px solid var(--terminal-purple);
+            color: var(--terminal-purple);
+            padding: 8px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .key-btn:hover:not(:disabled) {
+            border-color: var(--terminal-green);
+            color: var(--terminal-green);
+            box-shadow: 0 0 20px rgba(0,255,157,0.3);
+        }
+
+        .key-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        /* Main Quiz Area */
+        .quiz-area {
+            background: var(--bg-secondary);
+            border: 2px solid var(--border-color);
+            border-top: none;
+            border-radius: 0 0 12px 12px;
+            padding: 40px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .level-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 1px dashed var(--border-color);
+        }
+
+        .level-badge {
+            background: linear-gradient(135deg, var(--terminal-purple), var(--terminal-blue));
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            letter-spacing: 2px;
+        }
+
+        .difficulty {
+            color: var(--terminal-yellow);
+        }
+
+        .difficulty::before {
+            content: "⚡";
+            margin-right: 5px;
+        }
+
+        /* Funny Container */
+        .funny-container {
+            background: #000000;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+            min-height: 250px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .funny-container::before {
+            content: "😂 FUNNY ZONE 😂";
+            position: absolute;
+            top: 10px;
+            left: 20px;
+            color: var(--text-secondary);
+            font-size: 0.7rem;
+            opacity: 0.5;
+        }
+
+        .funny-emoji {
+            font-size: 8rem;
+            line-height: 1;
+            margin-bottom: 20px;
+            filter: drop-shadow(0 0 30px rgba(255,157,0,0.3));
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+        }
+
+        .funny-title {
+            color: var(--terminal-orange);
+            font-size: 1.1rem;
+            letter-spacing: 2px;
+        }
+
+        .funny-title::before,
+        .funny-title::after {
+            content: "😂";
+            margin: 0 10px;
+            color: var(--terminal-yellow);
+            opacity: 0.5;
+        }
+
+        /* Question Text */
+        .question-text {
+            font-size: 1.3rem;
+            line-height: 1.8;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: rgba(0,0,0,0.3);
+            border-left: 4px solid var(--terminal-orange);
+            border-radius: 4px;
+        }
+
+        .question-text::before {
+            content: ">";
+            color: var(--terminal-orange);
+            margin-right: 10px;
+        }
+
+        /* Key Answer Section */
+        .key-reveal {
+            background: #000000;
+            border: 2px solid var(--terminal-yellow);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 30px;
+            display: none;
+            position: relative;
+        }
+
+        .key-reveal.visible {
+            display: block;
+            animation: reveal 0.5s ease;
+        }
+
+        @keyframes reveal {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .key-reveal::before {
+            content: "🔑 KEY ACCESS GRANTED";
+            position: absolute;
+            top: -12px;
+            left: 20px;
+            background: #000000;
+            padding: 0 15px;
+            color: var(--terminal-yellow);
+            font-size: 0.8rem;
+            border: 1px solid var(--terminal-yellow);
+            border-radius: 20px;
+        }
+
+        .answer-hidden {
+            font-size: 1.5rem;
+            text-align: center;
+            color: var(--terminal-yellow);
+            word-break: break-word;
+        }
+
+        /* Input Area */
+        .input-area {
+            margin-top: 30px;
+        }
+
+        .terminal-input {
+            width: 100%;
+            padding: 15px 20px;
+            background: #000000;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--terminal-green);
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            transition: all 0.3s;
+        }
+
+        .terminal-input:focus {
+            outline: none;
+            border-color: var(--terminal-orange);
+            box-shadow: 0 0 20px rgba(255,157,0,0.2);
+        }
+
+        .terminal-input::placeholder {
+            color: var(--text-secondary);
+            opacity: 0.5;
+        }
+
+        .btn-execute {
+            width: 100%;
+            padding: 15px;
+            background: transparent;
+            border: 2px solid var(--terminal-orange);
+            color: var(--terminal-orange);
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+            letter-spacing: 2px;
+        }
+
+        .btn-execute::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,157,0,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn-execute:hover::before {
+            left: 100%;
+        }
+
+        .btn-execute:hover {
+            background: rgba(255,157,0,0.1);
+            box-shadow: 0 0 30px rgba(255,157,0,0.3);
+        }
+
+        /* Feedback */
+        .feedback {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 6px;
+            display: none;
+            font-weight: bold;
+        }
+
+        .feedback.success {
+            display: block;
+            background: rgba(0,255,157,0.1);
+            border: 2px solid var(--terminal-green);
+            color: var(--terminal-green);
+        }
+
+        .feedback.error {
+            display: block;
+            background: rgba(255,59,111,0.1);
+            border: 2px solid var(--accent);
+            color: var(--accent);
+        }
+
+        /* Navigation */
+        .nav-terminal {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        .nav-link {
+            background: transparent;
+            border: 2px solid var(--terminal-blue);
+            color: var(--terminal-blue);
+            padding: 12px 30px;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .nav-link:hover:not(.disabled) {
+            border-color: var(--terminal-orange);
+            color: var(--terminal-orange);
+            transform: translateY(-2px);
+        }
+
+        .nav-link.disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,157,0,0.3);
+            border-radius: 50%;
+            border-top-color: var(--terminal-orange);
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Auto Next Indicator */
+        .auto-next-indicator {
+            text-align: center;
+            margin-top: 15px;
+            color: var(--terminal-orange);
+            font-size: 0.9rem;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .auto-next-indicator.visible {
+            opacity: 1;
+        }
+
+        @media (max-width: 768px) {
+            .quiz-area {
+                padding: 20px;
+            }
+            
+            .funny-emoji {
+                font-size: 5rem;
+            }
+            
+            .question-text {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Terminal Header -->
+        <div class="terminal-header">
+            <div class="path">
+                <span>root@host</span>:<span style="color: var(--terminal-blue);">/funny_quiz/</span>
+            </div>
+            <div class="key-panel">
+                <span class="count" id="keyCount">5</span>
+                <span style="color: var(--text-secondary);">KEYS</span>
+                <button class="key-btn" id="useKeyBtn" onclick="useKey()">USE_KEY</button>
+            </div>
+        </div>
+
+        <!-- Main Quiz Area -->
+        <div class="quiz-area">
+            <div class="level-info">
+                <span class="level-badge" id="levelBadge">LEVEL_001</span>
+                <span class="difficulty" id="difficulty">🤪 LUCU</span>
+            </div>
+
+            <!-- Funny Display -->
+            <div class="funny-container">
+                <div class="funny-emoji" id="funnyEmoji">😂</div>
+                <div class="funny-title" id="funnyTitle">"BRAIN TEASER"</div>
+            </div>
+
+            <!-- Question Text -->
+            <div class="question-text" id="questionText">
+                Initializing funny question...
+            </div>
+
+            <!-- Key Reveal Section -->
+            <div class="key-reveal" id="keyReveal">
+                <div class="answer-hidden" id="keyAnswer"></div>
+            </div>
+
+            <!-- Input Area -->
+            <div class="input-area">
+                <input type="text" class="terminal-input" id="answerInput" placeholder=">_ ENTER_YOUR_FUNNY_ANSWER" autocomplete="off">
+                <button class="btn-execute" onclick="checkAnswer()">
+                    <span>⏎ CHECK_ANSWER</span>
+                </button>
+            </div>
+
+            <!-- Feedback -->
+            <div class="feedback" id="feedback"></div>
+            
+            <!-- Auto Next Indicator -->
+            <div class="auto-next-indicator" id="autoNextIndicator">
+                ⚡ NEXT LEVEL IN 3... 2... 1... ⚡
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <div class="nav-terminal">
+            <a class="nav-link" id="prevBtn" onclick="navigate(-1)">⟵ PREV</a>
+            <a href="index.html" class="nav-link">⟐ EXIT</a>
+            <a class="nav-link" id="nextBtn" onclick="navigate(1)">NEXT ⟶</a>
+        </div>
+    </div>
+
+    <script>
+        // Database teka-teki lucu, menghibur, dan menarik (120 level)
+        const funnyDB = [
+            // Level 1-10: Tebak-tebakan Kocak
+            {
+                level: 1,
+                emoji: "🐔",
+                title: "AYAM ATAU TELUR?",
+                question: "> Hewan apa yang paling sabar?",
+                answer: "ayam",
+                hint: "Karena sabar menunggu telurnya menetas",
+                difficulty: "🤪 LUCU"
+            },
+            {
+                level: 2,
+                emoji: "🍌",
+                title: "BUAH LUCU",
+                question: "> Buah apa yang selalu kena razia?",
+                answer: "melon",
+                hint: "Melon... Melanggar peraturan lalu lintas?",
+                difficulty: "🤪 LUCU"
+            },
+            {
+                level: 3,
+                emoji: "🚗",
+                title: "KENDARAAN",
+                question: "> Kendaraan apa yang bikin orang mundur?",
+                answer: "mobil",
+                hint: "Mobil... Masa bodo?",
+                difficulty: "🤪 LUCU"
+            },
+            {
+                level: 4,
+                emoji: "🐄",
+                title: "HEWAN UNIK",
+                question: "> Hewan apa yang paling kaya?",
+                answer: "kambing",
+                hint: "Kambing... Karena punya emas (kambing guling?)",
+                difficulty: "😄 LUCU BANGET"
+            },
+            {
+                level: 5,
+                emoji: "🐱",
+                title: "SI MEONG",
+                question: "> Kucing apa yang bisa masuk botol?",
+                answer: "kucing",
+                hint: "Kucing... Kucing? Coba pikir lagi!",
+                difficulty: "🤔 TEKA-TEKI"
+            },
+            {
+                level: 6,
+                emoji: "🎂",
+                title: "MAKANAN",
+                question: "> Kue apa yang selalu dimakan orang tapi gak pernah habis?",
+                answer: "kue",
+                hint: "Kue... Kue? Kue ulang tahun?",
+                difficulty: "🍰 LUCU"
+            },
+            {
+                level: 7,
+                emoji: "🌊",
+                title: "LAUTAN",
+                question: "> Ikan apa yang paling malas?",
+                answer: "tidur",
+                hint: "Ikan tidur... Ikan yang suka tidur",
+                difficulty: "😴 LUCU"
+            },
+            {
+                level: 8,
+                emoji: "🚲",
+                title: "OLAHRAGA",
+                question: "> Olahraga apa yang paling kecil?",
+                answer: "lari",
+                hint: "Lari... Lari kecil?",
+                difficulty: "🏃 LUCU"
+            },
+            {
+                level: 9,
+                emoji: "👻",
+                title: "HANTU",
+                question: "> Hantu apa yang bisa dilihat di TV?",
+                answer: "hantu",
+                hint: "Hantu... Hantu? Hantu tipi (TV)?",
+                difficulty: "📺 LUCU"
+            },
+            {
+                level: 10,
+                emoji: "☕",
+                title: "MINUMAN",
+                question: "> Minuman apa yang paling bikin orang pusing?",
+                answer: "teh",
+                hint: "Teh... Teh kotak? Teh botol?",
+                difficulty: "🤪 LUCU"
+            },
+            // Level 11-20: Teka-teki Random
+            {
+                level: 11,
+                emoji: "🧦",
+                title: "PAKAIAN",
+                question: "> Kaos kaki apa yang paling berbahaya?",
+                answer: "kaki",
+                hint: "Kaos kaki... Kaos kaki gajah?",
+                difficulty: "🧦 LUCU"
+            },
+            {
+                level: 12,
+                emoji: "🦷",
+                title: "KESEHATAN",
+                question: "> Gigi apa yang paling sering digerogotin orang?",
+                answer: "gigi",
+                hint: "Gigi... Gigi palsu?",
+                difficulty: "🦷 LUCU"
+            },
+            {
+                level: 13,
+                emoji: "🧠",
+                title: "OTAK",
+                question: "> Apa yang lebih pintar dari otak manusia?",
+                answer: "otak",
+                hint: "Otak... Otak sapi?",
+                difficulty: "🤯 SUSAH"
+            },
+            {
+                level: 14,
+                emoji: "💡",
+                title: "IDE CERDAS",
+                question: "> Lampu apa yang paling terang di dunia?",
+                answer: "lampu",
+                hint: "Lampu... Lampu jalan?",
+                difficulty: "💡 LUCU"
+            },
+            {
+                level: 15,
+                emoji: "🔑",
+                title: "KUNCI",
+                question: "> Kunci apa yang bisa bikin orang ketawa?",
+                answer: "kunci",
+                hint: "Kunci... Kunci inggris?",
+                difficulty: "🔑 LUCU"
+            },
+            // Level 16-30: Tebak-tebakan Receh
+            {
+                level: 16,
+                emoji: "📞",
+                title: "TELEPON",
+                question: "> Telepon apa yang suka bikin orang marah?",
+                answer: "telepon",
+                hint: "Telepon... Telepon tagihan?",
+                difficulty: "📞 LUCU"
+            },
+            {
+                level: 17,
+                emoji: "✈️",
+                title: "PESAWAT",
+                question: "> Pesawat apa yang paling kecil di dunia?",
+                answer: "pesawat",
+                hint: "Pesawat... Pesawat kertas?",
+                difficulty: "✈️ LUCU"
+            },
+            {
+                level: 18,
+                emoji: "🏠",
+                title: "RUMAH",
+                question: "> Rumah apa yang paling menakutkan?",
+                answer: "rumah",
+                hint: "Rumah... Rumah hantu?",
+                difficulty: "👻 LUCU"
+            },
+            {
+                level: 19,
+                emoji: "🌙",
+                title: "BULAN",
+                question: "> Bulan apa yang paling ditakuti?",
+                answer: "bulan",
+                hint: "Bulan... Bulan puasa?",
+                difficulty: "🌙 LUCU"
+            },
+            {
+                level: 20,
+                emoji: "⭐",
+                title: "BINTANG",
+                question: "> Bintang apa yang bisa masuk rumah?",
+                answer: "bintang",
+                hint: "Bintang... Bintang tamu?",
+                difficulty: "⭐ LUCU"
+            },
+            // Level 21-30: Tebakan Random
+            {
+                level: 21,
+                emoji: "🌧️",
+                title: "HUJAN",
+                question: "> Hujan apa yang paling menyebalkan?",
+                answer: "hujan",
+                hint: "Hujan... Hujan deras?",
+                difficulty: "🌧️ LUCU"
+            },
+            {
+                level: 22,
+                emoji: "🌪️",
+                title: "ANGIN",
+                question: "> Angin apa yang paling bikin orang pusing?",
+                answer: "angin",
+                hint: "Angin... Angin topan?",
+                difficulty: "🌪️ LUCU"
+            },
+            {
+                level: 23,
+                emoji: "🔥",
+                title: "API",
+                question: "> Api apa yang paling dingin?",
+                answer: "api",
+                hint: "Api... Api unggun?",
+                difficulty: "🔥 LUCU"
+            },
+            {
+                level: 24,
+                emoji: "💧",
+                title: "AIR",
+                question: "> Air apa yang bisa bikin orang kaya?",
+                answer: "air",
+                hint: "Air... Air mineral?",
+                difficulty: "💧 LUCU"
+            },
+            {
+                level: 25,
+                emoji: "🌍",
+                title: "BUMI",
+                question: "> Bumi apa yang paling enak?",
+                answer: "bumi",
+                hint: "Bumi... Bumi hangus?",
+                difficulty: "🌍 LUCU"
+            },
+            // Level 26-40: Tebakan Konyol
+            {
+                level: 26,
+                emoji: "🍕",
+                title: "PIZZA",
+                question: "> Pizza apa yang paling populer di Indonesia?",
+                answer: "pizza",
+                hint: "Pizza... Pizza Hut?",
+                difficulty: "🍕 LUCU"
+            },
+            {
+                level: 27,
+                emoji: "🍔",
+                title: "BURGER",
+                question: "> Burger apa yang paling kecil?",
+                answer: "burger",
+                hint: "Burger... Burger king?",
+                difficulty: "🍔 LUCU"
+            },
+            {
+                level: 28,
+                emoji: "🍟",
+                title: "KENTANG",
+                question: "> Kentang apa yang paling populer?",
+                answer: "kentang",
+                hint: "Kentang... Kentang goreng?",
+                difficulty: "🍟 LUCU"
+            },
+            {
+                level: 29,
+                emoji: "🌭",
+                title: "SOSIS",
+                question: "> Sosis apa yang paling panjang?",
+                answer: "sosis",
+                hint: "Sosis... Sosis solo?",
+                difficulty: "🌭 LUCU"
+            },
+            {
+                level: 30,
+                emoji: "🥨",
+                title: "PRETZEL",
+                question: "> Pretzel apa yang paling bikin gemuk?",
+                answer: "pretzel",
+                hint: "Pretzel... Pretzel coklat?",
+                difficulty: "🥨 LUCU"
+            }
+        ];
+
+        // Generate level 31-120 dengan variasi lucu
+        const funnyEmojis = ["😂", "🤣", "😅", "😆", "😝", "🤪", "😜", "🤓", "😎", "🥳", "😱", "👽", "🤖", "🎃", "👻"];
+        const funnyTitles = [
+            "TEKA-TEKI GOKIL", "BAKALAN NGIKIK", "SIAP-SIAP KETAWA", 
+            "PLIS JANGAN SERIUS", "ALAY BANGET", "GA NYANGKA", 
+            "WTF MOMENT", "LOL", "OMG", "ROFL", "LMAO",
+            "SUSAH BANGET", "GAMPANG BANGET", "BIKIN PUSING",
+            "TAPI BOONG", "SERIUSAN?", "KOCAK PARAH"
+        ];
+
+        for (let i = 31; i <= 120; i++) {
+            const randomEmoji = funnyEmojis[Math.floor(Math.random() * funnyEmojis.length)];
+            const randomTitle = funnyTitles[Math.floor(Math.random() * funnyTitles.length)];
+            const randomDifficulty = ["🤪 LUCU", "😄 LUCU BANGET", "🤔 TEKA-TEKI", "🤯 SUSAH", "😂 KOCAK", "😝 GOKIL", "🤪 ALAY"][Math.floor(Math.random() * 7)];
+            
+            // Pertanyaan random yang lucu
+            const funnyQuestions = [
+                `> Kenapa ayam kalau berkokok matanya merem?`,
+                `> Apa bedanya sepatu sama jendela?`,
+                `> Hewan apa yang paling panjang?`,
+                `> Buah apa yang paling rajin?`,
+                `> Sayur apa yang paling pintar?`,
+                `> Ikan apa yang bisa terbang?`,
+                `> Benda apa yang paling berat?`,
+                `> Apa yang punya leher tapi tidak punya kepala?`,
+                `> Apa yang naik tapi tidak pernah turun?`,
+                `> Apa yang punya sayap tapi tidak bisa terbang?`,
+                `> Binatang apa yang paling pelupa?`,
+                `> Buah apa yang suka pamer?`,
+                `> Minuman apa yang paling ditakuti?`,
+                `> Makanan apa yang suka ngambek?`,
+                `> Kendaraan apa yang paling tua?`
+            ];
+            
+            // Jawaban random yang lucu
+            const funnyAnswers = [
+                "ayam", "sepatu", "ular", "apel", "bayam", "lele", "batu", "botol", "umur", "ayam", 
+                "kuda", "nanas", "kopi", "bakso", "sepeda"
+            ];
+            
+            funnyDB.push({
+                level: i,
+                emoji: randomEmoji,
+                title: `${randomTitle} #${i}`,
+                question: funnyQuestions[i % funnyQuestions.length],
+                answer: funnyAnswers[i % funnyAnswers.length],
+                difficulty: randomDifficulty
+            });
+        }
+
+        // State
+        let currentLevel = 1;
+        let userProgress = { keys: 5, completedLevels: [], currentLevel: 1 };
+        let keyUsed = false;
+        let autoNextTimer = null;
+
+        // Load data
+        function initialize() {
+            // Load progress
+            const saved = localStorage.getItem('hostQuiz_nexus');
+            if (saved) {
+                userProgress = JSON.parse(saved);
+                // Pastikan currentLevel ada di progress
+                if (!userProgress.currentLevel) {
+                    userProgress.currentLevel = 1;
+                }
+            }
+
+            // Get level from URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const levelFromUrl = parseInt(urlParams.get('level'));
+            
+            if (levelFromUrl && !isNaN(levelFromUrl) && levelFromUrl >= 1 && levelFromUrl <= 120) {
+                currentLevel = levelFromUrl;
+            } else {
+                currentLevel = userProgress.currentLevel || 1;
+            }
+
+            updateUI();
+        }
+
+        function updateUI() {
+            const levelData = funnyDB.find(l => l.level === currentLevel) || funnyDB[0];
+            
+            document.getElementById('keyCount').textContent = userProgress.keys;
+            document.getElementById('levelBadge').textContent = `LEVEL_${String(currentLevel).padStart(3, '0')}`;
+            document.getElementById('difficulty').textContent = levelData.difficulty;
+            document.getElementById('funnyEmoji').textContent = levelData.emoji;
+            document.getElementById('funnyTitle').textContent = `"${levelData.title}"`;
+            document.getElementById('questionText').textContent = levelData.question;
+            document.getElementById('answerInput').value = '';
+            document.getElementById('keyReveal').classList.remove('visible');
+            document.getElementById('feedback').className = 'feedback';
+            document.getElementById('autoNextIndicator').classList.remove('visible');
+            
+            keyUsed = false;
+            document.getElementById('useKeyBtn').disabled = userProgress.keys <= 0;
+
+            // Update navigasi
+            document.getElementById('prevBtn').classList.toggle('disabled', currentLevel <= 1);
+            document.getElementById('nextBtn').classList.toggle('disabled', currentLevel >= 120);
+            
+            // Update URL tanpa reload
+            const url = new URL(window.location);
+            url.searchParams.set('level', currentLevel);
+            window.history.replaceState({}, '', url);
+        }
+
+        function checkAnswer() {
+            const userAnswer = document.getElementById('answerInput').value.toLowerCase().trim();
+            const levelData = funnyDB.find(l => l.level === currentLevel);
+            
+            if (!levelData) return;
+
+            // Jawaban fleksibel (bisa mengandung kata kunci)
+            const isCorrect = userAnswer.includes(levelData.answer.toLowerCase());
+            const feedback = document.getElementById('feedback');
+
+            if (isCorrect) {
+                feedback.className = 'feedback success';
+                feedback.textContent = '✓ HAHA! JAWABANMU LUCU DAN BENAR!';
+
+                // Update progress
+                if (!userProgress.completedLevels.includes(currentLevel)) {
+                    userProgress.completedLevels.push(currentLevel);
+                    
+                    // Update current level di progress
+                    if (currentLevel < 120) {
+                        userProgress.currentLevel = currentLevel + 1;
+                    }
+                    
+                    localStorage.setItem('hostQuiz_nexus', JSON.stringify(userProgress));
+                }
+
+                // Tampilkan indikator auto next
+                document.getElementById('autoNextIndicator').classList.add('visible');
+
+                // Auto next ke level berikutnya setelah 2 detik
+                if (autoNextTimer) clearTimeout(autoNextTimer);
+                
+                autoNextTimer = setTimeout(() => {
+                    if (currentLevel < 120) {
+                        navigate(1);
+                    } else {
+                        // Jika sudah level 120, kembali ke dashboard
+                        window.location.href = 'index.html?completed=120';
+                    }
+                }, 2000);
+            } else {
+                feedback.className = 'feedback error';
+                feedback.textContent = '✗ HAHA! SALAH! TAPI TETAP LUCU COBA LAGI!';
+                
+                // Hapus indikator auto next jika ada
+                document.getElementById('autoNextIndicator').classList.remove('visible');
+            }
+        }
+
+        function useKey() {
+            if (userProgress.keys <= 0) {
+                alert('[!] UPS! KEY HABIS! Tonton iklan atau claim harian ya!');
+                return;
+            }
+
+            if (keyUsed) {
+                alert('[!] Key sudah dipakai untuk level ini!');
+                return;
+            }
+
+            const levelData = funnyDB.find(l => l.level === currentLevel);
+            if (!levelData) return;
+
+            // Kurangi key
+            userProgress.keys--;
+            localStorage.setItem('hostQuiz_nexus', JSON.stringify(userProgress));
+
+            // Tampilkan jawaban dengan hint lucu
+            const funnyAnswer = `${levelData.answer} (${levelData.hint || 'Rahasia dong!'})`;
+            document.getElementById('keyAnswer').textContent = funnyAnswer;
+            document.getElementById('keyReveal').classList.add('visible');
+            document.getElementById('useKeyBtn').disabled = true;
+            document.getElementById('keyCount').textContent = userProgress.keys;
+            
+            keyUsed = true;
+        }
+
+        function navigate(direction) {
+            // Hapus timer auto next jika ada
+            if (autoNextTimer) {
+                clearTimeout(autoNextTimer);
+                autoNextTimer = null;
+            }
+
+            const newLevel = currentLevel + direction;
+            if (newLevel >= 1 && newLevel <= 120) {
+                currentLevel = newLevel;
+                updateUI();
+            }
+        }
+
+        // Initialize on load
+        window.addEventListener('load', initialize);
+
+        // Enter key to submit
+        document.getElementById('answerInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                checkAnswer();
+            }
+        });
+
+        // Keyboard navigation (left/right arrows)
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') {
+                navigate(-1);
+            } else if (e.key === 'ArrowRight') {
+                navigate(1);
+            }
+        });
+    </script>
+</body>
+</html>

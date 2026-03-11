@@ -3,9 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HOST QUIZ</title>
+    <title>HOST QUIZ - OFFLINE</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700&display=swap');
+        /* ===== RESET & VARIABEL ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
         :root {
             --bg-primary: #0a0e1a;
@@ -18,24 +23,20 @@
             --terminal-blue: #3b8eff;
             --terminal-purple: #9d3bff;
             --border-color: #1e2638;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'JetBrains Mono', monospace;
+            --font-mono: 'Courier New', monospace;
         }
 
         body {
             background: var(--bg-primary);
             color: var(--text-primary);
+            font-family: var(--font-mono);
             min-height: 100vh;
             position: relative;
             overflow-x: hidden;
+            line-height: 1.5;
         }
 
-        /* CRT Effect */
+        /* ===== EFEK CRT ===== */
         body::before {
             content: "";
             position: fixed;
@@ -55,7 +56,7 @@
             100% { transform: translateY(100%); }
         }
 
-        /* Glitch Effect */
+        /* ===== GLITCH EFEK ===== */
         .glitch {
             position: relative;
             animation: glitch 3s infinite;
@@ -79,7 +80,19 @@
             z-index: 1;
         }
 
-        /* Header dengan efek terminal */
+        /* ===== ASCII ART ===== */
+        .ascii-art {
+            color: var(--text-secondary);
+            font-size: 0.6rem;
+            line-height: 1.1;
+            margin-bottom: 15px;
+            opacity: 0.6;
+            text-align: center;
+            white-space: pre;
+            overflow-x: auto;
+        }
+
+        /* ===== HEADER ===== */
         .header {
             background: var(--bg-secondary);
             border: 2px solid var(--border-color);
@@ -118,8 +131,8 @@
         }
 
         .logo h1 {
-            font-size: 2.5rem;
-            font-weight: 700;
+            font-size: 2.2rem;
+            font-weight: bold;
             background: linear-gradient(135deg, var(--terminal-green), var(--terminal-blue));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -130,7 +143,6 @@
         .logo p {
             color: var(--text-secondary);
             font-size: 0.9rem;
-            margin-top: 5px;
         }
 
         .logo p::before {
@@ -138,7 +150,7 @@
             color: var(--terminal-green);
         }
 
-        /* Key Terminal */
+        /* ===== KEY TERMINAL ===== */
         .key-terminal {
             background: #000000;
             border: 2px solid var(--terminal-green);
@@ -183,24 +195,10 @@
             cursor: pointer;
             font-weight: bold;
             font-size: 0.9rem;
+            font-family: inherit;
             transition: all 0.3s;
             position: relative;
             overflow: hidden;
-        }
-
-        .key-btn::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(59, 142, 255, 0.2), transparent);
-            transition: left 0.5s;
-        }
-
-        .key-btn:hover::before {
-            left: 100%;
         }
 
         .key-btn:hover {
@@ -209,7 +207,7 @@
             box-shadow: 0 0 20px rgba(0,255,157,0.3);
         }
 
-        /* Stats Dashboard */
+        /* ===== STATS ===== */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -233,16 +231,6 @@
             box-shadow: 0 10px 30px rgba(0,255,157,0.15);
         }
 
-        .stat-card::before {
-            content: "▲";
-            position: absolute;
-            top: 10px;
-            right: 15px;
-            color: var(--terminal-green);
-            opacity: 0.3;
-            font-size: 12px;
-        }
-
         .stat-value {
             font-size: 3rem;
             font-weight: bold;
@@ -263,7 +251,7 @@
             color: var(--terminal-green);
         }
 
-        /* Level Grid dengan gaya terminal */
+        /* ===== SECTION TITLE ===== */
         .section-title {
             font-size: 1.5rem;
             margin-bottom: 20px;
@@ -278,9 +266,10 @@
             font-size: 1rem;
         }
 
+        /* ===== LEVEL GRID ===== */
         .level-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
             gap: 15px;
             margin-top: 20px;
         }
@@ -289,7 +278,7 @@
             background: var(--bg-secondary);
             border: 1px solid var(--border-color);
             border-radius: 10px;
-            padding: 15px;
+            padding: 15px 10px;
             text-align: center;
             cursor: pointer;
             transition: all 0.3s;
@@ -297,25 +286,14 @@
             overflow: hidden;
         }
 
-        .level-item::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(45deg, transparent, rgba(0,255,157,0.05), transparent);
-            transform: translateX(-100%);
-            transition: transform 0.5s;
-        }
-
-        .level-item:hover::before {
-            transform: translateX(100%);
+        .level-item:hover {
+            border-color: var(--terminal-green);
+            transform: scale(1.02);
         }
 
         .level-item.completed {
             border-color: var(--terminal-green);
-            box-shadow: 0 0 20px rgba(0,255,157,0.2);
+            box-shadow: 0 0 15px rgba(0,255,157,0.3);
         }
 
         .level-item.current {
@@ -324,13 +302,13 @@
         }
 
         .level-item.locked {
-            opacity: 0.5;
+            opacity: 0.4;
             cursor: not-allowed;
-            filter: grayscale(1);
+            filter: grayscale(0.8);
         }
 
         .level-number {
-            font-size: 1.2rem;
+            font-size: 1rem;
             font-weight: bold;
             margin-bottom: 5px;
             color: var(--terminal-blue);
@@ -339,24 +317,15 @@
         .level-icon {
             font-size: 2.5rem;
             margin: 10px 0;
-            filter: drop-shadow(0 0 10px rgba(0,255,157,0.3));
         }
 
-        .lock-icon {
+        .lock-icon, .check-icon {
             position: absolute;
             top: 5px;
-            right: 5px;
             font-size: 1.2rem;
-            color: var(--accent);
         }
-
-        .check-icon {
-            position: absolute;
-            top: 5px;
-            left: 5px;
-            font-size: 1.2rem;
-            color: var(--terminal-green);
-        }
+        .lock-icon { right: 5px; color: var(--accent); }
+        .check-icon { left: 5px; color: var(--terminal-green); }
 
         @keyframes pulse {
             0% { box-shadow: 0 0 0 0 var(--accent-glow); }
@@ -364,7 +333,7 @@
             100% { box-shadow: 0 0 0 0 rgba(255, 59, 111, 0); }
         }
 
-        /* Modal Terminal */
+        /* ===== MODAL ===== */
         .terminal-modal {
             display: none;
             position: fixed;
@@ -431,11 +400,6 @@
             margin-bottom: 5px;
         }
 
-        .ad-option p {
-            color: var(--text-secondary);
-            font-size: 0.85rem;
-        }
-
         .modal-buttons {
             display: flex;
             gap: 10px;
@@ -450,6 +414,7 @@
             cursor: pointer;
             font-weight: bold;
             font-size: 0.9rem;
+            font-family: inherit;
             transition: all 0.3s;
             background: transparent;
         }
@@ -458,78 +423,55 @@
             border-color: var(--terminal-green);
             color: var(--terminal-green);
         }
-
         .modal-btn.confirm:hover {
             background: var(--terminal-green);
             color: #000000;
         }
-
         .modal-btn.cancel {
             border-color: var(--accent);
             color: var(--accent);
         }
-
         .modal-btn.cancel:hover {
             background: var(--accent);
             color: #000000;
         }
 
-        /* ASCII Decoration */
-        .ascii-art {
-            color: var(--text-secondary);
-            font-size: 0.7rem;
-            line-height: 1;
-            margin-bottom: 10px;
-            opacity: 0.5;
-            text-align: center;
-        }
-
         @media (max-width: 768px) {
-            .stats-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .level-grid {
-                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-            }
-            
-            .header {
-                flex-direction: column;
-                align-items: stretch;
-            }
+            .stats-grid { grid-template-columns: 1fr; }
+            .level-grid { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); }
+            .header { flex-direction: column; align-items: stretch; }
+            .key-buttons { flex-wrap: wrap; }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- ASCII Header -->
+        <!-- ASCII HEADER -->
         <div class="ascii-art">
-            <pre>
-    ██╗  ██╗ █████╗ ███████╗████████╗
-    ██║  ██║██╔═══██╗██╔════╝╚═██╔══╝  
+    ██╗  ██╗ ██████╗ ███████╗████████╗
+    ██║  ██║██╔═══██╗██╔════╝╚══██╔══╝  
     ███████║██║   ██║███████╗   ██║
-    ██╔═██║██║   ██║╚════██║   ██║ 
+    ██╔══██║██║   ██║╚════██║   ██║ 
     ██║  ██║╚██████╔╝███████║   ██║ 
     ╚═╝  ╚═╝ ╚═════╝ ╚══════╝   ╚═╝        
-            </pre>
         </div>
 
-        <!-- Header -->
+        <!-- HEADER -->
         <div class="header">
             <div class="logo">
                 <h1 class="glitch">HOST QUIZ</h1>
-                <p>BRAIN_QUIZ v1.0 - SendyHost</p>
+                <p>BRAIN_QUIZ v1.0 - OFFLINE</p>
             </div>
             <div class="key-terminal">
                 <span class="key-count" id="keyCount">5</span>
                 <div class="key-buttons">
-                    <button class="key-btn" onclick="claimDaily()">⟳ CLAIM_HARIAN</button>
-                    <button class="key-btn" onclick="showAdModal()">📺 WATCH_IKLAN</button>
+                    <button class="key-btn" id="claimDailyBtn">⟳ CLAIM_HARIAN</button>
+                    <button class="key-btn" id="showAdBtn">📺 WATCH_IKLAN</button>
                 </div>
             </div>
         </div>
 
-        <!-- Stats -->
+        <!-- STATS -->
         <div class="stats-grid">
             <div class="stat-card">
                 <div class="stat-value" id="completedStats">0</div>
@@ -537,7 +479,7 @@
             </div>
             <div class="stat-card">
                 <div class="stat-value" id="currentLevel">1</div>
-                <div class="stat-label">LEVEL BELUM SELESAI</div>
+                <div class="stat-label">LEVEL BERIKUT</div>
             </div>
             <div class="stat-card">
                 <div class="stat-value" id="keysRemaining">5</div>
@@ -545,173 +487,203 @@
             </div>
         </div>
 
-        <!-- Level Grid -->
+        <!-- LEVEL SECTION -->
         <div class="section-title">
             <span>SELECT LEVEL //</span>
-            <span style="color: var(--text-secondary); font-size: 0.9rem;">[120 TANTANGAN]</span>
+            <span style="color: var(--text-secondary);">[120 TANTANGAN]</span>
         </div>
         <div class="level-grid" id="levelGrid"></div>
     </div>
 
-    <!-- Modal Iklan -->
+    <!-- MODAL IKLAN -->
     <div class="terminal-modal" id="adModal">
         <div class="modal-content">
             <div class="modal-title">⟁ ACQUIRE KEYS ⟁</div>
-            <div class="ad-option" onclick="watchAd('reward')">
+            <div class="ad-option" id="rewardVideo">
                 <h4>▶ REWARD_VIDEO // +3 KEYS</h4>
-                <p>> Watch full video advertisement</p>
+                <p>> Tonton simulasi video (offline)</p>
             </div>
-            <div class="ad-option" onclick="watchAd('interstitial')">
+            <div class="ad-option" id="interstitialAd">
                 <h4>▶ INTERSTITIAL // +2 KEYS</h4>
-                <p>> Watch short ad placement</p>
+                <p>> Tonton simulasi singkat</p>
             </div>
             <div class="modal-buttons">
-                <button class="modal-btn cancel" onclick="closeModal()">⨯ CANCEL</button>
+                <button class="modal-btn cancel" id="closeModalBtn">⨯ CANCEL</button>
             </div>
         </div>
     </div>
 
     <script>
-        // Data levels dengan artwork unik
-        const levelArtworks = [
-            "🎨", "🌌", "🏛️", "🌆", "🎭", "🌉", "🏯", "🌠", "🎪", "🏰",
-            "🌅", "🎑", "🏞️", "🌋", "🏝️", "🎐", "🏮", "🎎", "🏺", "⚱️",
-            "📿", "💎", "🖼️", "🪞", "🕰️", "⚗️", "🔮", "📜", "⚔️", "🛡️"
-        ];
-
-        // Generate 120 level
-        const levelData = Array.from({ length: 120 }, (_, i) => ({
-            id: i + 1,
-            icon: levelArtworks[i % levelArtworks.length],
-            completed: false,
-            unlocked: i === 0
-        }));
-
-        // User progress
-        let userProgress = {
-            currentLevel: 1,
-            completedLevels: [],
-            keys: 5,
-            lastDaily: null
-        };
-
-        // Load dari localStorage
-        function loadProgress() {
-            const saved = localStorage.getItem('hostQuiz_nexus');
-            if (saved) {
-                userProgress = JSON.parse(saved);
-            }
-            updateDisplay();
-            renderLevels();
-        }
-
-        function saveProgress() {
-            localStorage.setItem('hostQuiz_nexus', JSON.stringify(userProgress));
-            updateDisplay();
-        }
-
-        function updateDisplay() {
-            document.getElementById('keyCount').textContent = userProgress.keys;
-            document.getElementById('keysRemaining').textContent = userProgress.keys;
-            document.getElementById('completedStats').textContent = userProgress.completedLevels.length;
-            document.getElementById('currentLevel').textContent = userProgress.currentLevel;
-        }
-
-        function renderLevels() {
-            const grid = document.getElementById('levelGrid');
-            grid.innerHTML = '';
-
-            for (let i = 1; i <= 120; i++) {
-                const isCompleted = userProgress.completedLevels.includes(i);
-                const isUnlocked = i <= userProgress.currentLevel;
-                const isCurrent = i === userProgress.currentLevel;
-
-                const levelEl = document.createElement('div');
-                levelEl.className = `level-item ${isCompleted ? 'completed' : ''} ${isCurrent ? 'current' : ''} ${!isUnlocked ? 'locked' : ''}`;
-                
-                if (isUnlocked) {
-                    levelEl.onclick = () => window.location.href = `quiz.html?level=${i}`;
-                }
-
-                levelEl.innerHTML = `
-                    <div class="level-number">LVL ${i}</div>
-                    <div class="level-icon">${levelArtworks[(i-1) % levelArtworks.length]}</div>
-                    ${!isUnlocked ? '<span class="lock-icon">🔒</span>' : ''}
-                    ${isCompleted ? '<span class="check-icon">✓</span>' : ''}
-                `;
-
-                grid.appendChild(levelEl);
-            }
-        }
-
-        // Daily claim
-        function claimDaily() {
-            const today = new Date().toDateString();
+        (function() {
+            // ========== DATA LEVEL ==========
+            const levelArtworks = ["🎨","🌌","🏛️","🌆","🎭","🌉","🏯","🌠","🎪","🏰"];
             
-            if (userProgress.lastDaily === today) {
-                alert('[!] DAILY_KEY already claimed. Return tomorrow.');
-                return;
-            }
+            // ========== USER PROGRESS ==========
+            let userProgress = {
+                currentLevel: 1,
+                completedLevels: [],
+                keys: 5,
+                lastDaily: null
+            };
 
-            userProgress.keys += 2;
-            userProgress.lastDaily = today;
-            saveProgress();
-            alert('[✓] +2 KEYS acquired!');
-        }
-
-        // Modal functions
-        function showAdModal() {
-            document.getElementById('adModal').style.display = 'flex';
-        }
-
-        function closeModal() {
-            document.getElementById('adModal').style.display = 'none';
-        }
-
-        // Simulasi watch ad
-        function watchAd(type) {
-            closeModal();
-            
-            const loadingMessages = [
-                '[>] Loading advertisement...',
-                '[>>] Buffering content...',
-                '[>>>] Establishing secure connection...'
-            ];
-            
-            loadingMessages.forEach(msg => console.log(msg));
-            
-            setTimeout(() => {
-                const keys = type === 'reward' ? 3 : 2;
-                userProgress.keys += keys;
-                saveProgress();
-                alert(`[✓] AD_COMPLETE! +${keys} KEYS added to wallet.`);
-            }, 2000);
-        }
-
-        // Cek level completion dari URL
-        window.addEventListener('load', () => {
-            loadProgress();
-            
-            const urlParams = new URLSearchParams(window.location.search);
-            const completed = urlParams.get('completed');
-            if (completed) {
-                const level = parseInt(completed);
-                if (!userProgress.completedLevels.includes(level)) {
-                    userProgress.completedLevels.push(level);
-                    if (level < 120 && level === userProgress.currentLevel) {
-                        userProgress.currentLevel = level + 1;
+            // ========== LOAD/SAVE ==========
+            function loadProgress() {
+                try {
+                    const saved = localStorage.getItem('hostQuiz_offline');
+                    if (saved) {
+                        const parsed = JSON.parse(saved);
+                        // validasi sederhana
+                        if (parsed && typeof parsed === 'object') {
+                            userProgress = {
+                                currentLevel: parsed.currentLevel || 1,
+                                completedLevels: Array.isArray(parsed.completedLevels) ? parsed.completedLevels : [],
+                                keys: typeof parsed.keys === 'number' ? parsed.keys : 5,
+                                lastDaily: parsed.lastDaily || null
+                            };
+                        }
                     }
-                    saveProgress();
+                } catch (e) {
+                    console.warn('Gagal load localStorage, pakai default');
+                }
+                // batasi agar tidak overflow
+                if (userProgress.currentLevel > 120) userProgress.currentLevel = 120;
+                if (userProgress.currentLevel < 1) userProgress.currentLevel = 1;
+                updateDisplay();
+                renderLevels();
+            }
+
+            function saveProgress() {
+                try {
+                    localStorage.setItem('hostQuiz_offline', JSON.stringify(userProgress));
+                } catch (e) {}
+                updateDisplay();
+                renderLevels(); // biar icon check langsung muncul
+            }
+
+            function updateDisplay() {
+                document.getElementById('keyCount').textContent = userProgress.keys;
+                document.getElementById('keysRemaining').textContent = userProgress.keys;
+                document.getElementById('completedStats').textContent = userProgress.completedLevels.length;
+                document.getElementById('currentLevel').textContent = userProgress.currentLevel;
+            }
+
+            // ========== RENDER LEVELS ==========
+            function renderLevels() {
+                const grid = document.getElementById('levelGrid');
+                grid.innerHTML = '';
+
+                for (let i = 1; i <= 120; i++) {
+                    const isCompleted = userProgress.completedLevels.includes(i);
+                    const isUnlocked = i <= userProgress.currentLevel;
+                    const isCurrent = i === userProgress.currentLevel;
+
+                    const levelEl = document.createElement('div');
+                    levelEl.className = `level-item ${isCompleted ? 'completed' : ''} ${isCurrent ? 'current' : ''} ${!isUnlocked ? 'locked' : ''}`;
+                    
+                    if (isUnlocked) {
+                        levelEl.onclick = () => {
+                            window.location.href = `quiz.html?level=${i}`;
+                        };
+                    }
+
+                    levelEl.innerHTML = `
+                        <div class="level-number">LVL ${i}</div>
+                        <div class="level-icon">${levelArtworks[(i-1) % levelArtworks.length]}</div>
+                        ${!isUnlocked ? '<span class="lock-icon">🔒</span>' : ''}
+                        ${isCompleted ? '<span class="check-icon">✓</span>' : ''}
+                    `;
+
+                    grid.appendChild(levelEl);
                 }
             }
-        });
 
-        // Close modal on outside click
-        window.onclick = (e) => {
-            if (e.target.classList.contains('terminal-modal')) {
-                closeModal();
+            // ========== DAILY CLAIM ==========
+            function claimDaily() {
+                const today = new Date().toDateString();
+                
+                if (userProgress.lastDaily === today) {
+                    alert('[!] DAILY_KEY sudah diklaim hari ini. Kembali besok!');
+                    return;
+                }
+
+                userProgress.keys += 2;
+                userProgress.lastDaily = today;
+                saveProgress();
+                alert('[✓] +2 KEYS berhasil diklaim!');
             }
-        };
+
+            // ========== MODAL ==========
+            const modal = document.getElementById('adModal');
+            const closeBtn = document.getElementById('closeModalBtn');
+
+            function showAdModal() {
+                modal.style.display = 'flex';
+            }
+
+            function closeModal() {
+                modal.style.display = 'none';
+            }
+
+            // ========== SIMULASI WATCH AD ==========
+            function watchAd(type) {
+                closeModal();
+                
+                const loadingMsg = ['[>] Loading iklan...','[>>] Buffering...','[>>>] Selesai!'];
+                loadingMsg.forEach(msg => console.log(msg));
+                
+                setTimeout(() => {
+                    const keys = type === 'reward' ? 3 : 2;
+                    userProgress.keys += keys;
+                    saveProgress();
+                    alert(`[✓] IKLAN SELESAI! +${keys} KEYS ditambahkan.`);
+                }, 1500);
+            }
+
+            // ========== EVENT LISTENERS ==========
+            document.getElementById('claimDailyBtn').addEventListener('click', claimDaily);
+            document.getElementById('showAdBtn').addEventListener('click', showAdModal);
+            document.getElementById('rewardVideo').addEventListener('click', () => watchAd('reward'));
+            document.getElementById('interstitialAd').addEventListener('click', () => watchAd('interstitial'));
+            closeBtn.addEventListener('click', closeModal);
+
+            window.addEventListener('click', (e) => {
+                if (e.target === modal) closeModal();
+            });
+
+            // ========== CEK KOMPLET DARI URL ==========
+            function checkCompletionFromUrl() {
+                const urlParams = new URLSearchParams(window.location.search);
+                const completed = urlParams.get('completed');
+                if (completed) {
+                    const level = parseInt(completed);
+                    if (!isNaN(level) && level >= 1 && level <= 120) {
+                        if (!userProgress.completedLevels.includes(level)) {
+                            userProgress.completedLevels.push(level);
+                            // jika level ini adalah currentLevel, naikkan currentLevel ke berikutnya (jika ada)
+                            if (level === userProgress.currentLevel && level < 120) {
+                                userProgress.currentLevel = level + 1;
+                            } else if (level >= 120) {
+                                userProgress.currentLevel = 120;
+                            }
+                            saveProgress();
+                        }
+                    }
+                    // bersihkan URL
+                    window.history.replaceState({}, '', 'index.html');
+                }
+            }
+
+            // ========== INIT ==========
+            loadProgress();
+            checkCompletionFromUrl();
+
+            // Sinkronisasi jika ada perubahan dari tab lain (tidak terlalu diperlukan untuk offline, tapi tetap)
+            window.addEventListener('storage', (e) => {
+                if (e.key === 'hostQuiz_offline') {
+                    loadProgress();
+                }
+            });
+        })();
     </script>
 </body>
 </html>

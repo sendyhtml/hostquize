@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>REDEEM CODE - HOST QUIZ</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700&display=swap');
+
+        :root {
+            --bg-primary: #0a0e1a;
+            --bg-secondary: #0f1524;
+            --text-primary: #00ff9d;
+            --text-secondary: #6c7a96;
+            --accent: #ff3b6f;
+            --terminal-green: #00ff9d;
+            --terminal-blue: #3b8eff;
+            --terminal-purple: #9d3bff;
+            --terminal-gold: #ffd700;
+            --border-color: #1e2638;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        body {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* CRT Effect */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(rgba(0,255,157,0.03) 50%, rgba(0,0,0,0.1) 50%);
+            background-size: 100% 4px;
+            pointer-events: none;
+            z-index: 1000;
+            animation: scanline 8s linear infinite;
+        }
+
+        @keyframes scanline {
+            0% { transform: translateY(-100%); }
+            100% { transform: translateY(100%); }
+        }
+
+        .container {
+            max-width: 500px;
+            width: 90%;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .redeem-card {
+            background: var(--bg-secondary);
+            border: 3px solid var(--terminal-gold);
+            border-radius: 20px;
+            padding: 40px 30px;
+            box-shadow: 0 0 50px rgba(255,215,0,0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .redeem-card::before {
+            content: "🎫";
+            position: absolute;
+            top: -20px;
+            right: -20px;
+            font-size: 150px;
+            opacity: 0.1;
+            transform: rotate(15deg);
+        }
+
+        .redeem-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .redeem-header h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, var(--terminal-gold), var(--terminal-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .redeem-header p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .redeem-header p::before {
+            content: "✦ ";
+            color: var(--terminal-gold);
+        }
+
+        .redeem-header p::after {
+            content: " ✦";
+            color: var(--terminal-gold);
+        }
+
+        .info-box {
+            background: #000000;
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 30px;
+        }
+
+        .info-title {
+            color: var(--terminal-gold);
+            font-weight: bold;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .info-title::before {
+            content: "📋";
+        }
+
+        .code-list {
+            list-style: none;
+        }
+
+        .code-list li {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px dashed var(--border-color);
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .code-list li:last-child {
+            border-bottom: none;
+        }
+
+        .code-value {
+            color: var(--terminal-green);
+            font-weight: bold;
+            letter-spacing: 2px;
+        }
+
+        .code-poin {
+            color: var(--terminal-gold);
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--terminal-blue);
+            font-size: 0.9rem;
+        }
+
+        .input-group label::before {
+            content: ">";
+            color: var(--terminal-green);
+            margin-right: 5px;
+        }
+
+        .terminal-input {
+            width: 100%;
+            padding: 15px 20px;
+            background: #000000;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--terminal-gold);
+            font-size: 1.2rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: all 0.3s;
+        }
+
+        .terminal-input:focus {
+            outline: none;
+            border-color: var(--terminal-gold);
+            box-shadow: 0 0 20px rgba(255,215,0,0.3);
+        }
+
+        .terminal-input::placeholder {
+            color: var(--text-secondary);
+            opacity: 0.3;
+            text-transform: none;
+            letter-spacing: normal;
+            font-size: 0.9rem;
+        }
+
+        .btn-redeem {
+            width: 100%;
+            padding: 15px;
+            background: transparent;
+            border: 3px solid var(--terminal-gold);
+            color: var(--terminal-gold);
+            font-size: 1.3rem;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 15px;
+            position: relative;
+            overflow: hidden;
+            letter-spacing: 3px;
+        }
+
+        .btn-redeem::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,215,0,0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn-redeem:hover::before {
+            left: 100%;
+        }
+
+        .btn-redeem:hover {
+            background: rgba(255,215,0,0.1);
+            box-shadow: 0 0 30px rgba(255,215,0,0.4);
+            transform: translateY(-2px);
+        }
+
+        .btn-back {
+            display: block;
+            text-align: center;
+            padding: 12px;
+            background: transparent;
+            border: 2px solid var(--terminal-blue);
+            color: var(--terminal-blue);
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .btn-back:hover {
+            border-color: var(--terminal-green);
+            color: var(--terminal-green);
+            transform: translateY(-2px);
+        }
+
+        .feedback {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: bold;
+            display: none;
+        }
+
+        .feedback.success {
+            display: block;
+            background: rgba(0,255,157,0.1);
+            border: 2px solid var(--terminal-green);
+            color: var(--terminal-green);
+        }
+
+        .feedback.error {
+            display: block;
+            background: rgba(255,59,111,0.1);
+            border: 2px solid var(--accent);
+            color: var(--accent);
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,215,0,0.3);
+            border-radius: 50%;
+            border-top-color: var(--terminal-gold);
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            .redeem-card {
+                padding: 30px 20px;
+            }
+            
+            .redeem-header h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="redeem-card">
+            <div class="redeem-header">
+                <h1>✦ REDEEM ZONE ✦</h1>
+                <p>MASUKAN KODE RAHASIA DARI ADMIN</p>
+            </div>
+
+            <!-- Info Box - Daftar Kode Redeem Aktif -->
+            <div class="info-box">
+                <div class="info-title">ACTIVE CODES</div>
+                <ul class="code-list" id="codeList">
+                    <!-- Akan diisi JavaScript -->
+                </ul>
+            </div>
+
+            <!-- Input Redeem -->
+            <div class="input-group">
+                <label>REDEEM_CODE</label>
+                <input type="text" class="terminal-input" id="redeemCode" placeholder="CONTOH: SANTRI2024" maxlength="20" autocomplete="off">
+            </div>
+
+            <button class="btn-redeem" onclick="redeemCode()">
+                <span>⚡ CLAIM REWARD ⚡</span>
+            </button>
+
+            <a href="index.html" class="btn-back">⟵ BACK TO DASHBOARD</a>
+
+            <!-- Feedback -->
+            <div class="feedback" id="feedback"></div>
+        </div>
+    </div>
+
+    <script>
+        // Database kode redeem (bisa diatur sendiri)
+        const redeemCodes = [
+            { code: "HADIAH", poin: 50, used: false, desc: "Hadiah" }
+        ];
+
+        // Load status used dari localStorage
+        function loadRedeemStatus() {
+            const saved = localStorage.getItem('hostQuiz_redeem');
+            if (saved) {
+                const usedCodes = JSON.parse(saved);
+                redeemCodes.forEach(item => {
+                    if (usedCodes.includes(item.code)) {
+                        item.used = true;
+                    }
+                });
+            }
+            displayCodeList();
+        }
+
+        // Simpan status used ke localStorage
+        function saveRedeemStatus() {
+            const usedCodes = redeemCodes.filter(item => item.used).map(item => item.code);
+            localStorage.setItem('hostQuiz_redeem', JSON.stringify(usedCodes));
+        }
+
+        // Tampilkan daftar kode
+        function displayCodeList() {
+            const list = document.getElementById('codeList');
+            list.innerHTML = '';
+            
+            redeemCodes.forEach(item => {
+                const li = document.createElement('li');
+                li.innerHTML = `
+                    <span class="code-value">${item.code}</span>
+                    <span class="code-poin">+${item.poin} POIN</span>
+                `;
+                if (item.used) {
+                    li.style.opacity = '0.3';
+                    li.style.textDecoration = 'line-through';
+                    li.innerHTML += `<span style="color: var(--accent); margin-left: 5px;">[USED]</span>`;
+                }
+                list.appendChild(li);
+            });
+        }
+
+        // Fungsi redeem
+        function redeemCode() {
+            const input = document.getElementById('redeemCode').value.trim().toUpperCase();
+            const feedback = document.getElementById('feedback');
+            
+            if (!input) {
+                feedback.className = 'feedback error';
+                feedback.textContent = '✗ MASUKAN KODE REDEEM!';
+                return;
+            }
+
+            // Cari kode
+            const codeItem = redeemCodes.find(item => item.code === input);
+            
+            if (!codeItem) {
+                feedback.className = 'feedback error';
+                feedback.textContent = '✗ KODE TIDAK VALID!';
+                return;
+            }
+
+            if (codeItem.used) {
+                feedback.className = 'feedback error';
+                feedback.textContent = '✗ KODE SUDAH PERNAH DIGUNAKAN!';
+                return;
+            }
+
+            // Proses redeem
+            feedback.className = 'feedback';
+            feedback.innerHTML = '<span class="loading"></span> MEMVERIFIKASI...';
+            
+            setTimeout(() => {
+                // Ambil user progress
+                const userProgress = JSON.parse(localStorage.getItem('hostQuiz_nexus')) || { poin: 0, keys: 5, completedLevels: [], currentLevel: 1 };
+                
+                // Tambah poin
+                userProgress.poin = (userProgress.poin || 0) + codeItem.poin;
+                
+                // Simpan ke localStorage
+                localStorage.setItem('hostQuiz_nexus', JSON.stringify(userProgress));
+                
+                // Tandai kode sudah digunakan
+                codeItem.used = true;
+                saveRedeemStatus();
+                
+                // Update tampilan
+                displayCodeList();
+                
+                // Tampilkan feedback sukses
+                feedback.className = 'feedback success';
+                feedback.textContent = `✓ BERHASIL! +${codeItem.poin} POIN! Selamat!`;
+                
+                // Reset input
+                document.getElementById('redeemCode').value = '';
+                
+                // Animasi tambahan
+                const card = document.querySelector('.redeem-card');
+                card.style.animation = 'none';
+                card.offsetHeight;
+                card.style.animation = 'pulse 0.5s';
+            }, 1500);
+        }
+
+        // Load status saat halaman dimuat
+        window.addEventListener('load', loadRedeemStatus);
+
+        // Enter key untuk redeem
+        document.getElementById('redeemCode').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                redeemCode();
+            }
+        });
+    </script>
+</body>
+</html>

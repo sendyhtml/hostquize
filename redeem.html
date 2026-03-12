@@ -344,7 +344,64 @@
         </div>
     </div>
 
-    <script>
+    <!-- Audio Player untuk Background Music -->
+<audio id="bgMusic" loop style="display: none;">
+    <source src="hostquiz.mp3" type="audio/mpeg">
+    Your browser does not support the audio element.
+</audio>
+
+<script>
+    // Background Music Controller
+    document.addEventListener('DOMContentLoaded', function() {
+        const bgMusic = document.getElementById('bgMusic');
+        
+        // Cek apakah user sudah pernah interaksi dengan halaman sebelumnya
+        const musicPlayed = localStorage.getItem('musicPlayed');
+        
+        // Fungsi untuk memulai music
+        function playMusic() {
+            bgMusic.play().catch(e => {
+                console.log('Auto-play prevented. Waiting for user interaction...');
+                // Jika auto-play diblokir, tunggu interaksi user
+                document.addEventListener('click', function playOnClick() {
+                    bgMusic.play();
+                    document.removeEventListener('click', playOnClick);
+                }, { once: true });
+            });
+        }
+
+        // Coba play music
+        if (musicPlayed) {
+            // Jika sudah pernah diputar sebelumnya, coba play dengan volume lebih rendah
+            bgMusic.volume = 0.3;
+            playMusic();
+        } else {
+            // Pertama kali, play dengan volume lebih rendah dan tandai sudah diputar
+            bgMusic.volume = 0.2;
+            playMusic();
+            localStorage.setItem('musicPlayed', 'true');
+        }
+
+        // Tambahkan kontrol volume (opsional)
+        window.addEventListener('load', function() {
+            // Set volume lebih rendah agar tidak terlalu mengganggu
+            bgMusic.volume = 0.2;
+        });
+    });
+
+    // Fungsi untuk mengontrol music (opsional, bisa dipanggil dari console)
+    window.musicControl = {
+        play: function() {
+            document.getElementById('bgMusic').play();
+        },
+        pause: function() {
+            document.getElementById('bgMusic').pause();
+        },
+        setVolume: function(vol) {
+            document.getElementById('bgMusic').volume = vol;
+        }
+    };
+    
         // Database kode redeem (bisa diatur sendiri)
         const redeemCodes = [
             { code: "HADIAH", poin: 50, used: false, desc: "Hadiah" }
